@@ -9,16 +9,18 @@
   <meta name="description" content="关于从vs空项目开始配置OCC环境（待整理） 关于OCC例程学习关于结合例程来学习OCC这个事，就是直接运行OCC提供的快捷方式来跑就行，不用说非要在编译器里面把代码跑起来，乐 Qt例程文件位置 ~\OpenCASCADE-7.6.0-vc14-64\opencascade-7.6.0\samples\qt 运行该路径下的OCCTOverview快捷方式，该例程是配合Qt写的OCC使用例程  右侧">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/2023/03/01/OCC%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/index.html">
+<meta property="og:url" content="http://example.com/2023/03/02/OCC%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="关于从vs空项目开始配置OCC环境（待整理） 关于OCC例程学习关于结合例程来学习OCC这个事，就是直接运行OCC提供的快捷方式来跑就行，不用说非要在编译器里面把代码跑起来，乐 Qt例程文件位置 ~\OpenCASCADE-7.6.0-vc14-64\opencascade-7.6.0\samples\qt 运行该路径下的OCCTOverview快捷方式，该例程是配合Qt写的OCC使用例程  右侧">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="d:/typora图片/研究生笔记/OCC相关/image-20221109131136257.png">
-<meta property="article:published_time" content="2023-03-01T12:31:01.463Z">
-<meta property="article:modified_time" content="2023-02-24T11:04:06.702Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/Unglaus/Blog-Imgs/main/image-20221109131136257.png">
+<meta property="og:image" content="http://example.com/2023/03/02/OCC%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/OCC%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97.assets/image-20230302085839007.png">
+<meta property="og:image" content="http://example.com/2023/03/02/OCC%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/OCC%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97.assets/image-20230302085910827.png">
+<meta property="article:published_time" content="2023-03-02T00:48:08.798Z">
+<meta property="article:modified_time" content="2023-03-02T00:59:15.070Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="d:/typora图片/研究生笔记/OCC相关/image-20221109131136257.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Unglaus/Blog-Imgs/main/image-20221109131136257.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -77,8 +79,8 @@
       <div class="outer">
         <section id="main"><article id="post-OCC学习心得" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2023/03/01/OCC%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/" class="article-date">
-  <time class="dt-published" datetime="2023-03-01T12:31:01.463Z" itemprop="datePublished">2023-03-01</time>
+    <a href="/2023/03/02/OCC%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/" class="article-date">
+  <time class="dt-published" datetime="2023-03-02T00:48:08.798Z" itemprop="datePublished">2023-03-02</time>
 </a>
     
   </div>
@@ -92,14 +94,16 @@
 <h2 id="Qt例程"><a href="#Qt例程" class="headerlink" title="Qt例程"></a>Qt例程</h2><p><strong>文件位置</strong></p>
 <p>~\OpenCASCADE-7.6.0-vc14-64\opencascade-7.6.0\<strong>samples\qt</strong></p>
 <p>运行该路径下的OCCTOverview快捷方式，该例程是配合Qt写的OCC使用例程</p>
-<p><img src="D:\typora图片\研究生笔记\OCC相关\image-20221109131136257.png" alt="image-20221109131136257"></p>
+<p><img src="https://raw.githubusercontent.com/Unglaus/Blog-Imgs/main/image-20221109131136257.png" alt="image-20221109131136257"></p>
 <p>右侧为对应的相关源代码，但比较坑的是，右侧显示的这些源代码的位置为：</p>
 <p>~\OpenCASCADE-7.6.0-vc14-64\opencascade-7.6.0\<strong>samples\OCCTOverview\code</strong></p>
-<p>其中关于**<code>myContext</code><strong>和</strong><code>myObject3d</code><strong>这类东西的定义在</strong>BaseSample.h**中</p>
+<p>其中关于 <strong><code>myContext</code></strong> 和 <strong><code>myObject3d</code></strong> 这类东西的定义在 <strong>BaseSample.h</strong> 中</p>
 <h1 id="常用代码"><a href="#常用代码" class="headerlink" title="常用代码"></a>常用代码</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//输出stl文件</span></span><br><span class="line"><span class="keyword">const</span> Standard_Real aLinearDeflection = <span class="number">0.01</span>;</span><br><span class="line"><span class="keyword">const</span> Standard_Real anAngularDeflection = <span class="number">0.5</span>;</span><br><span class="line"><span class="function">BRepMesh_IncrementalMesh <span class="title">aMesher</span><span class="params">(t_topo_box, aLinearDeflection, Standard_False, anAngularDeflection,Standard_True)</span></span>;</span><br><span class="line">aMesher.Perform();</span><br><span class="line">StlAPI::Write(t_topo_box, <span class="string">&quot;box.stl&quot;</span>);</span><br></pre></td></tr></table></figure>
 
 
 
+<p><img src="OCC%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97.assets/image-20230302085839007.png" alt="image-20230302085839007"></p>
+<p><img src="./OCC%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97.assets/image-20230302085910827.png" alt="image-20230302085910827"></p>
 <h1 id="英文名词"><a href="#英文名词" class="headerlink" title="英文名词"></a>英文名词</h1><ul>
 <li>category：类别</li>
 </ul>
@@ -122,7 +126,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/03/01/OCC%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/" data-id="clepnplnw0000f4kv8ma15s05" data-title="" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/03/02/OCC%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/" data-id="cleqehnal0000kwkvh6qv4d33" data-title="" class="article-share-link">Share</a>
       
       
       
@@ -173,7 +177,7 @@
       <ul>
         
           <li>
-            <a href="/2023/03/01/OCC%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/">(no title)</a>
+            <a href="/2023/03/02/OCC%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/">(no title)</a>
           </li>
         
           <li>
