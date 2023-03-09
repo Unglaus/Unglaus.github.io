@@ -2777,9 +2777,6 @@ article .recent-excerpt p {
   max-width: 280px;
   padding: 0 20px;
 }
-margin 0 auto {
-  display: block;
-}
 #toc-div .toc {
   margin: 0;
   padding: 10px;
