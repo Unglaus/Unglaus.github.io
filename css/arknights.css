@@ -2777,56 +2777,49 @@ article .recent-excerpt p {
   max-width: 280px;
   padding: 0 20px;
 }
-margin 0 auto .toc,
+margin 0 auto {
+  display: block;
+}
 #toc-div .toc {
   margin: 0;
   padding: 10px;
   list-style: none;
 }
-margin 0 auto .toc-child,
 #toc-div .toc-child {
   display: none;
   padding-left: 1em;
   list-style: none;
 }
-margin 0 auto .toc-item,
 #toc-div .toc-item {
   white-space: nowrap;
   overflow: hidden;
   margin: 2px 0;
 }
-margin 0 auto .has-active,
 #toc-div .has-active {
   display: block;
 }
-margin 0 auto .toc-link,
 #toc-div .toc-link {
   width: 100%;
   overflow-y: auto;
   scrollbar-width: none;
   display: inline-block;
 }
-margin 0 auto .toc-link::-webkit-scrollbar,
 #toc-div .toc-link::-webkit-scrollbar {
   display: none;
 }
-margin 0 auto .toc-link::-ms-scrollbar,
 #toc-div .toc-link::-ms-scrollbar {
   display: none;
 }
 @media (min-width: 769px) {
-  margin 0 auto .toc-link:hover .toc-number,
   #toc-div .toc-link:hover .toc-number {
     display: none;
   }
 }
 @media (min-width: 769px) {
-  margin 0 auto .active,
   #toc-div .active {
     color: var(--theme-text-hover);
     background-color: var(--theme-highlight);
   }
-  margin 0 auto .active .toc-number,
   #toc-div .active .toc-number {
     display: none;
   }
