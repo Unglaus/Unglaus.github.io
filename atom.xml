@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2023-03-09T03:19:22.420Z</updated>
+  <updated>2023-03-02T03:01:21.143Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,30 +15,6 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>OCC7.6+VS2022配置</title>
-    <link href="http://example.com/2023/03/08/OCC7.6_VS2022_config/"/>
-    <id>http://example.com/2023/03/08/OCC7.6_VS2022_config/</id>
-    <published>2023-03-08T02:29:37.000Z</published>
-    <updated>2023-03-09T03:19:22.420Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="OCC安装与编译"><a href="#OCC安装与编译" class="headerlink" title="OCC安装与编译"></a>OCC安装与编译</h2><h3 id="安装OCC"><a href="#安装OCC" class="headerlink" title="安装OCC"></a>安装OCC</h3><p>安装很简单，就是去官网<a href="https://dev.opencascade.org/">https://dev.opencascade.org/</a> 下载安装包安装即可。</p><p>这里用的是OCC7.6版本。</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308110314910.png" class="" title="image-20230308110314910"><p>注意：安装的时候路径不要有空格和汉字。</p><h3 id="VS2022编译v142的OCC"><a href="#VS2022编译v142的OCC" class="headerlink" title="VS2022编译v142的OCC"></a>VS2022编译v142的OCC</h3><p>安装之后得到的是OCC的编译前的资源文件，而想要使用OCC提供的方法还需要将这些文件进行编译。即编译后得到的文件才是我们使用OCC所必须的。</p><p>这里我安装的VS版本为2022，其默认的生成工具是v143，而OCC7.6最新支持的生成工具是v142，所以需要稍微操作一下，使VS2022能编译OCC。</p><p>需要注意的是，因为要用到v142生成工具，肯定要保证VS安装了v142的生成工具，没安的话打开Visual Studio Installer安一下即可。</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308180525147.png" class="" title="image-20230308180525147"><p>下面是OCC部分编译前的一些操作：<br>打开安装目录下 \opencascade-7.6.0 目录下的custom.bat，将其中要求的vcvarsall.bat文件所在路径填写完整，该路径跟VS安装的位置有关，下图我的路径配置。</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308193109354.png" class="" title="image-20230308193109354"><p>如果实在不知道在哪，可以安装一个软件”everything“，用它来查找vcvarsall.bat的位置即可</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308193610012.png" class="" title="image-20230308193610012"><p>之后，还是在 \opencascade-7.6.0 目录下，打开env.bat，在图示位置添加：<code>set “VCVER=vc143”</code></p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308195613333.png" class="" title="image-20230308195613333"><p>再打开 \opencascade-7.6.0\adm\msvc目录下，复制一份vc142并重命名为vc143，这就是前面提到的，OCC7.6还没有对应的2022版本（vc143）</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308200116215.png" class="" title="image-20230308200116215"><p>至此准备工作结束，可以用VS2022编译OCC7.6了</p><p>回到目录 \opencascade-7.6.0，双击msvc.bat，它会根据前面的配置打开对应版本的OCCT.sln，打开后会需要确认是否升级平台工具集，记得选择”无升级“。</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308200951007.png" class="" title="image-20230308200951007"><p>之后找到“解决方案资源管理器”，右键“解决方案”，选择“生成解决方案”即可</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308201434134.png" class="" title="image-20230308201434134"><p>等待VS编译完成</p><p>（编译完成图–等我在新电脑上配的时候截一张，懒得再重新生成一遍了）</p><p>编译完成后生成的文件在 \opencascade-7.6.0\win64\vc14 目录下</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308211826087.png" class="" title="image-20230308211826087"><p>其中的bind文件夹、libd文件夹中的文件是我们使用OCC所必需的的文件。一般是bin文件夹和lib文件夹，不过在OCC这里是bind和libd，应该是分别表示bin和lib的debug版本。因为我一直用的debug版本调试，找的教程也都是说配bind和libd的，不太清楚这个bin和lib是不是在release版本下用的，等之后如果用到release调试的时候试一下看看，等试过之后再来补充。</p><p>libd文件夹，存放程序运行时所需要的lib文件，lib文件是指程序库（library）文件，也称为静态链接库（static library），它包含了一组可在程序中共享的函数和资源的代码。</p><p>bind文件夹，存放运行lib时所必需的的dll文件，DLL（Dynamic Link Library）是一种可执行文件格式，它包含一组可在多个程序中共享的函数和资源。它通常被用于在 Windows 操作系统中实现共享库和插件的功能。一个 DLL 文件可以包含多个函数和资源，其他程序可以通过动态链接库（Dynamic Link Library）的方式调用 DLL 文件中的函数。</p><h2 id="VS中配置OCC环境"><a href="#VS中配置OCC环境" class="headerlink" title="VS中配置OCC环境"></a>VS中配置OCC环境</h2><p>前面也提到，我们所需的bind文件夹和libd文件夹生成好了之后，就可以配置在VS中使用OCC所需的一些属性，像OCC、PCL、VTK这种C++的库，其项目属性配置基本都是一致的，基本就是三步走。</p><p>第一步，将dll文件所在路径，在OCC这里即是上述提到的bind文件夹路径，添加到系统环境变量Path中</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308214135094.png" class="" title="image-20230308214135094"><p>之后在我们所建的项目中，在解决方案栏中，右键点击项目，选择属性一栏</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308214410626.png" class="" title="image-20230308214410626"><p>在属性页找到 调试—&gt;环境，输入 <code>PATH=%PATH%</code> ，使调试时能找到环境变量中bind所在路径，进一步能找到dll文件</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308214657910.png" class="" title="image-20230308214657910"><p>第二步，在属性页中找到 链接器—&gt;常规—&gt;附加库目录，将libd所在路径添加进去，方便编译器编译时能找到lib文件</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308215305372.png" class="" title="image-20230308215305372"><p>再找到 链接器—&gt;输入—&gt;附加依赖项，将libd文件夹下所有的lib文件添加进去</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308215515181.png" class="" title="image-20230308215515181"><p>至于如何快速取得文件夹下所有lib文件列表，找到目标文件夹libd，在该文件夹下“shift+右键”，选择 Powershell打开</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308220253619.png" class="" title="image-20230308220253619"><p>在该命令窗口输入 <code>ls *.lib -n</code>，即可得到该文件夹下所有lib结尾的文件列表，其中<code>-n</code>是指定列出来的信息只包含文件名和后缀，可以自己试试不带<code>-n</code>的结果</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308220606901.png" class="" title="image-20230308220606901"><p>第三步，在属性页找到 C/C++—&gt;常规—&gt;附加库包含目录，将OCC的头文件路径添加进去，该路径为安装目录下 \opencascade-7.6.0\inc ，其中存放的是在使用OCC时所需的所有头文件</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230308220708196.png" class="" title="image-20230308220708196"><p>上面三步无关顺序，能配完就行。</p><p>至此，就可以在C++程序中使用OCC提供的各种功能啦，开始愉快编程啦~</p><h2 id="VS属性表的使用"><a href="#VS属性表的使用" class="headerlink" title="VS属性表的使用"></a>VS属性表的使用</h2><h3 id="新建属性表"><a href="#新建属性表" class="headerlink" title="新建属性表"></a>新建属性表</h3><p>上面配置的VS属性页只针对当前项目有效，如果要新建项目并使用OCC，需要将上面的三个步骤再配置一遍，很不方便。而使用VS属性表就可以实现只用配置一次，下次直接拿来用即可的效果</p><p>在VS窗口上边菜单栏找到 视图—&gt;其他窗口—&gt;属性管理器</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230309092828035.png" class="" title="image-20230309092828035"><p>选择之后，属性管理器就会出现在解决方案管理器旁边的位置</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230309102328776.png" class="" title="image-20230309102328776"><p>找到自己需要的版本，比如我一般使用Debug|x64版本，我就在对应项旁边右键，选择 添加新项目属性表</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230309102607140.png" class="" title="image-20230309102607140"><p>因为是给OCC配置的属性表，就叫OCC.props吧，至于这个位置，它默认是建在当前项目所在的文件夹中，可以自定义一个文件夹位置，就光用来存这种属性表，当时候项目中需要哪个属性表，就直接去那个文件夹中好就行。</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230309093633371.png" class="" title="image-20230309093633371"><p>在建好的属性表里，把前面第二步、第三步里，关于“C/C++”和“链接器”选项中的部分复现一下即可，简单概括就是“C/C++”的附加包含目录里添加头文件目录，”链接器“的附加库目录里添加lib库路径、附加依赖项里把lib库中的所有lib添加进去。</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230309093948772.png" class="" title="image-20230309093948772"><p>可以看到这个属性表里没有第一步中“调试”选项，所以在 调试—&gt;环境，输入 <code>PATH=%PATH%</code> 这一步还是需要在具体的新建项目中配置一下，步骤参考前面第一步。</p><h3 id="使用已有属性表"><a href="#使用已有属性表" class="headerlink" title="使用已有属性表"></a>使用已有属性表</h3><p>上面属性表建好之后，下次新的项目要是用OCC的时候，直接把这个属性表引入即可</p><p>在属性管理器，要是用的对应版本处右键点击，选择 添加现有属性页</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230309102725370.png" class="" title="image-20230309102725370"><p>找到之前建好的属性表，添加即可</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230309102917214.png" class="" title="image-20230309102917214"><p>需要注意的是，通过这种添加现有项方式加入的属性表并不是把之前建的表复制了一个放在新项目里，新项目中是找不到这个属性表文件的，它实际还是之前建的那个属性表，只是编译器把它链接了过来，使我们可以使用该表的配置。这也意味着你如果在对这个属性表进行改动，会影响到所有使用该属性表的项目，一定要注意。</p><img src="/2023/03/08/OCC7.6_VS2022_config/image-20230309110423674.png" class="" title="image-20230309110423674">]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;OCC安装与编译&quot;&gt;&lt;a href=&quot;#OCC安装与编译&quot; class=&quot;headerlink&quot; title=&quot;OCC安装与编译&quot;&gt;&lt;/a&gt;OCC安装与编译&lt;/h2&gt;&lt;h3 id=&quot;安装OCC&quot;&gt;&lt;a href=&quot;#安装OCC&quot; class=&quot;headerlink</summary>
-      
-    
-    
-    
-    <category term="教程" scheme="http://example.com/categories/%E6%95%99%E7%A8%8B/"/>
-    
-    
-    <category term="OCC" scheme="http://example.com/tags/OCC/"/>
-    
-  </entry>
   
   <entry>
     <title>Hello World</title>
