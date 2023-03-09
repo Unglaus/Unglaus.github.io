@@ -2466,57 +2466,60 @@ article .recent-excerpt p {
 .recent-post img {
   width: 100%;
 }
-.recent-post h1 {
+display block {
+  margin: 0 auto;
+}
+h1 {
   font-family: sans-serif;
   color: var(--theme-text-light);
   margin: 0;
   padding: 15px 0 0 0;
 }
 @media (min-width: 769px) {
-  .recent-post:hover {
+  :hover {
     color: var(--theme-text-hover);
     background-color: var(--theme-highlight);
   }
-  .recent-post:hover a {
+  :hover a {
     color: var(--theme-text-hover);
   }
-  .recent-post:hover a:active {
+  :hover a:active {
     color: var(--theme-text-hover);
   }
-  .recent-post:hover a:hover {
+  :hover a:hover {
     color: var(--theme-text-light);
   }
-  .recent-post:hover time,
-  .recent-post:hover .categories {
+  :hover time,
+  :hover .categories {
     color: var(--theme-text-hover);
   }
-  .recent-post:hover .recent-info::after {
+  :hover .recent-info::after {
     background-color: var(--theme-bg-hover);
   }
-  .recent-post:hover .recent-excerpt a {
+  :hover .recent-excerpt a {
     color: var(--theme-text-light);
   }
-  .recent-post:hover hr {
+  :hover hr {
     color: var(--theme-highlight);
     border-color: var(--theme-highlight);
   }
-  .recent-post:hover figure table .gutter {
+  :hover figure table .gutter {
     background-color: var(--theme-border);
   }
-  .recent-post:hover figure table .code {
+  :hover figure table .code {
     background-color: var(--theme-bg-trans1);
   }
-  .recent-post:hover figure table .code,
-  .recent-post:hover figure table .code:hover {
+  :hover figure table .code,
+  :hover figure table .code:hover {
     color: var(--theme-text-light);
   }
-  .recent-post:hover blockquote,
-  .recent-post:hover blockquote:hover {
+  :hover blockquote,
+  :hover blockquote:hover {
     color: var(--theme-text-light);
     border-color: var(--theme-border);
     background-color: var(--theme-bg-trans1);
   }
-  .recent-post:hover .read-more {
+  :hover .read-more {
     color: var(--theme-text-light);
     background-color: var(--theme-bg-hover);
   }
