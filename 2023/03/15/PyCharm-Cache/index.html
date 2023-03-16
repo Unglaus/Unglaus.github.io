@@ -1,0 +1,64 @@
+<!DOCTYPE html><html lang="zh" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>更改PyCharm缓存路径 | Hexo</title><script>var config = {"root":"/","search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy","copyFinish":"copied","expand":"expand"}}</script><script src="//unpkg.com/mermaid@9.2.2/dist/mermaid.min.js"></script><link rel="stylesheet" href="/css/arknights.css"><script>if (window.localStorage.getItem('theme-mode') === 'light') document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark') document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.ttf");
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head><body><div class="loading" style="opacity: 0"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><nav><div class="navBtn hide"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/about/"><span class="navItemTitle">About</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>更改PyCharm缓存路径</h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2023-03-15T09:19:46.000Z" id="date"> 2023-03-15</time></div></span><br><span>Last Update: <div class="control"><time datetime="2023-03-15T13:44:52.861Z" id="updated"> 2023-03-15</time></div></span></div></div><hr><div id="post-content"><h2 id="越来越小的C盘"><a href="#越来越小的C盘" class="headerlink" title="越来越小的C盘"></a>越来越小的C盘</h2><p>最近C盘的空间越来越小了，于是便又开始找找有没有什么能删的垃圾文件。</p>
+<p>推荐一个软件“SpaceSniffer”，它可以扫描分析每个盘里面各个文件所占的大小，我用他扫描了一下我的C盘结果看到用户目录下的PyCharm文件夹里有个文件“content.dat.storage.data”有4.4个G的大小。</p>
+<img src="/2023/03/15/PyCharm-Cache/image-20230315192453628.png" class="" title="image-20230315192453628">
+
+<p>网上一查是PyCharm的缓存文件，补充一下，该文件存放在Caches文件夹里，Cache一般就是指缓存文件夹，用来存缓存文件的，当时没反应过来，不过就算直到Cache放缓存文件可能也还是查一查确认一下放心。</p>
+<p>这个缓存文件可以直接删除。但删除并不能从根源解决问题，因为下次使用PyCharm还是会生成缓存文件，早晚还是会一点一点挤占C盘的位置，所以最好的办法就是给PyCharm换一个缓存路径。</p>
+<h2 id="更换PyCharm缓存路径"><a href="#更换PyCharm缓存路径" class="headerlink" title="更换PyCharm缓存路径"></a>更换PyCharm缓存路径</h2><p>找到PyCharm的安装目录下的bin文件夹，如<code>E:\PyCharm Community Edition 2022.3.2\bin</code>，找到其中的idea.properties文件</p>
+<img src="/2023/03/15/PyCharm-Cache/image-20230315193543798.png" class="" title="image-20230315193543798">
+
+<p>打开该文件，修改其中的四处位置，推荐用“NotePad++”打开。当然，记事本，VS Code之类的都可以。</p>
+<img src="/2023/03/15/PyCharm-Cache/image-20230315194055634.png" class="" title="image-20230315194055634">
+
+<p>上面红框就是我们要修改的部分，它注释掉的语句应该是它本来默认的存放路径，不过可能因为注释掉了，所以其实并没有存在这个路径中，但还是在C盘建了别的文件夹来放这些文件。我们将这些路径改为我们想让它存放的路径。我在PyCharm的安装目录下新建了一个”.PyCharmCE2022.3”文件夹，并将这个路径改到了该文件夹下。</p>
+<ul>
+<li>修改config路径</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># idea.config.path=$&#123;user.home&#125;/.PyCharmCE/config</span><br>idea.config.path=E:/PyCharm Community Edition 2022.3.2/.PyCharmCE2022.3/config<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>修改system路径</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># idea.system.path=$&#123;user.home&#125;/.PyCharmCE/system</span><br>idea.system.path=E:/PyCharm Community Edition 2022.3.2/.PyCharmCE2022.3/system<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>修改plugins路径</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># idea.plugins.path=$&#123;idea.config.path&#125;/plugins</span><br>idea.plugins.path=E:/PyCharm Community Edition 2022.3.2/.PyCharmCE2022.3/plugins<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>修改log路径</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># idea.log.path=$&#123;idea.system.path&#125;/log</span><br>idea.log.path=E:/PyCharm Community Edition 2022.3.2/.PyCharmCE2022.3/<span class="hljs-built_in">log</span><br></code></pre></td></tr></table></figure>
+
+<p>之后重启PyCharm，它会自动检测之前的配置所在位置，并提示导入之前的配置</p>
+<img src="/2023/03/15/PyCharm-Cache/image-20230315212412556.png" class="" title="image-20230315212412556">
+
+<p>点击ok就行了，然后就可以把之前C盘里的都删掉了。</p>
+<p>不过因为前面提到的，它配置文件里那四个部分都默认是注释掉的，所以它实际存放的位置是在C盘别的位置，我的位置是在：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">C:\Users\REINHARDT\AppData\Local\JetBrains\PyCharmCE2022.3<br>C:\Users\REINHARDT\AppData\Roaming\JetBrains\PyCharmCE2022.3<br></code></pre></td></tr></table></figure>
+
+<p>不过删完那个4.4G的缓存文件之后我看这两占内存也不是很大我就没删，以防之后发现上面的配置方法有问题，我好回来找。不过一般也没问题，咬咬牙删了也没事。</p>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2023/03/16/Qt-Project-Structure/">← Next Qt项目的文件结构</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2023/03/13/PCL1.12.1-VS2022-Qt6.4-config/">PCL1.12.1+VS2022+Qt6.4 配置(未完待续) Prev →</a></div></div></div></div><div class="bottom-btn"><div><a id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧</a><a id="to-index" href="#toc-div" title="To Catalog">≡</a><a id="color-mode" onClick="colorMode.change()" title="Change Theme"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">Dr.Unglaus</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B6%8A%E6%9D%A5%E8%B6%8A%E5%B0%8F%E7%9A%84C%E7%9B%98"><span class="toc-number">1.</span> <span class="toc-text">越来越小的C盘</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%8D%A2PyCharm%E7%BC%93%E5%AD%98%E8%B7%AF%E5%BE%84"><span class="toc-number">2.</span> <span class="toc-text">更换PyCharm缓存路径</span></a></li></ol></div></div><footer><nobr>Published with <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> Theme <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr>by <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/search.js"></script><script class="pjax-js">reset=_=>{code.findCode();}</script><script src="/js/arknights.js"></script><script src="/js/pjax.js"></script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script></body></html>
