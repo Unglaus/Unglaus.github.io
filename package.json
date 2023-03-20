@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "hexo": "^5.0.0",
-    "hexo-asset-image": "^1.0.0",
+    "hexo-asset-img": "github:yiyungent/hexo-asset-img#main",
     "hexo-blog-encrypt": "^3.1.6",
     "hexo-browsersync": "^0.3.0",
     "hexo-deployer-git": "^3.0.0",
