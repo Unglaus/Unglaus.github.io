@@ -1,5 +1,5 @@
 ---
-title: PCL1.12.1+VS2022+Qt6.4 配置(未完待续)
+title: PCL1.12.1+VS2022+Qt6.4 配置
 date: 2023-03-13 21:07:58
 tags: PCL
 category: 教程
@@ -601,7 +601,7 @@ Generate完之后直接点旁边的Open Project打开VS编译器
 
 ![image-20230323224152087](PCL1.12.1-VS2022-Qt6.4-config/image-20230323224152087.png)
 
-## PCL源码
+## PCL源码编译
 
 VTK编译好后就可以开始PCL源码的编译，我们用上面编译好的VTK文件替换掉PCL自带的VTK文件
 
@@ -918,3 +918,11 @@ vtkzlib-9.2d.lib
 ```
 
 至此，PCL+VS+QT的配置告一段落，可以通过VTK在QT的ui界面显示PCL点云数据了
+
+多提一嘴，QVTKOpenGLNativeWidget继承自Qt的QOpenGLWidget，所以用的时候记得Qt组件里选上Qt OpenGLWidget
+
+![image-20230324103455398](PCL1.12.1-VS2022-Qt6.4-config/image-20230324103455398.png)
+
+## 后记
+
+这些编译好的文件可以直接拿去用，换电脑的时候也不用重新编译一遍，只需要从旧电脑把这些编译好的文件拷过去，配好路径就行了。这样搞害怕路径什么的有问题的话，最保险的办法就是之前说的，编译PCL的时候选上all_in_one_installer，然后用这个生成的安装器，去新电脑上安一下就行。
