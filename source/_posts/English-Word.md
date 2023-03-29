@@ -38,6 +38,22 @@ category: 英文学习
 ### CloudCompare Wiki
 
 - mesh：网格
+- portable：便携式
+- trade-off：权衡利弊
+- entity：实体
+- property：属性（财产）
+- scalar：标量
+- scale：规模、刻度
+- alignment：对齐
+- registration：对准（注册）
+- primitive：原始的
+- primitive factory：原始工厂（创建基础模型）
+- merge：合并
+- subsample：子样本
+- Octree：八叉树
+- histogram：直方图
+- projection：预测
+- SF（Sampling Factor）：降采样参数
 
 
 
