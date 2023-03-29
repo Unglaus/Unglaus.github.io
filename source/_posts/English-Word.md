@@ -44,18 +44,22 @@ category: 英文学习
 - property：属性（财产）
 - scalar：标量
 - scale：规模、刻度
+- align：对齐
 - alignment：对齐
-- registration：对准（注册）
-- primitive：原始的
-- primitive factory：原始工厂（创建基础模型）
+- registration：配准（注册）
+- fine registration：精确配准
+- primitive：原始的、基础的
+- primitive factory：基体工厂（创建基础模型）
+- cloud/primitive Dist：点云/基体距离
 - merge：合并
 - subsample：子样本
 - Octree：八叉树
 - histogram：直方图
 - projection：预测
-- SF（Sampling Factor）：降采样参数
-
-
+- SF（scalar field）：
+- rasterize：栅格化
+- volume：体积
+- statistic：统计数据
 
 
 
