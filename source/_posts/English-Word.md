@@ -38,7 +38,7 @@ category: 英文学习
 ### CloudCompare Wiki
 
 - mesh：网格
-- portable：便携式
+- portable：便携式（可移植）
 - trade-off：权衡利弊
 - entity：实体
 - property：属性（财产）
@@ -56,10 +56,12 @@ category: 英文学习
 - Octree：八叉树
 - histogram：直方图
 - projection：预测
-- SF（scalar field）：
+- SF（scalar field）：标量字段
 - rasterize：栅格化
 - volume：体积
 - statistic：统计数据
+- ALS：机载激光雷达扫描
+- TLS：地面激光雷达扫描
 
 
 
