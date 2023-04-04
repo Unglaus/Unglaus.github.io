@@ -65,6 +65,69 @@ category: 英文学习
 
 
 
+### Octree Wikipedia
+
+https://en.wikipedia.org/wiki/Octree
+
+- Octree：八叉树，用来将3维空间递归地细分为8个卦限，它相当于三维空间的四叉树
+- Quadtree：四叉树，用来将2维空间递归的分为4个象限。
+- octant：卦限，类似于于二维空间的象限，一维空间的ray
+- quadrant：象限
+- ray：射线（？）
+- recursively：递归的
+- subdivide：细分
+- analog：模拟、类似
+- dimension：纬度
+
+#### Implementation for point decomposition
+
+The example recursive algorithm outline below ([MATLAB](https://en.wikipedia.org/wiki/MATLAB) syntax) decomposes an array of 3-dimensional points into octree style  bins. The implementation begins with a single bin surrounding all given  points, which then recursively subdivides into its 8 octree regions.  Recursion is stopped when a given exit condition is met. Examples of  such exit conditions (shown in code below) are:
+
+- When a bin contains fewer than a given number of points
+- When a bin reaches a minimum size or volume based on the length of its edges
+- When recursion has reached a maximum number of subdivisions
+
+```matlab
+function [binDepths, binParents ,binCorners, pointBins] = OcTree(points)
+
+binDepths = [0]     % Initialize an array of bin depths with this single base-level bin
+binParents = [0]    % This base level bin is not a child of other bins
+binCorners = [min(points) max(points)] % It surrounds all points in XYZ space
+pointBins(:) = 1    % Initially, all points are assigned to this first bin
+divide(1)           % Begin dividing this first bin
+
+function divide(binNo)
+
+% If this bin meets any exit conditions, do not divide it any further.
+binPointCount = nnz(pointBins == binNo)
+binEdgeLengths = binCorners(binNo, 1:3) - binCorners(binNo, 4:6)
+binDepth = binDepths(binNo)
+exitConditionsMet = binPointCount<value || min(binEdgeLengths) < value || binDepth > value
+if exitConditionsMet
+    return; % Exit recursive function
+end
+
+% Otherwise, split this bin into 8 new sub-bins with a new division point
+newDiv = (binCorners(binNo, 1:3) + binCorners(binNo, 4:6)) / 2
+for i = 1:8
+    newBinNo = length(binDepths) + 1
+    binDepths(newBinNo) = binDepths(binNo) + 1
+    binParents(newBinNo) = binNo
+    binCorners(newBinNo) = [one of the 8 pairs of the newDiv with minCorner or maxCorner]
+    oldBinMask = pointBins == binNo
+    % Calculate which points in pointBins == binNo now belong in newBinNo
+    pointBins(newBinMask) = newBinNo
+    % Recursively divide this newly created bin
+    divide(newBinNo)
+end
+```
+
+
+
+
+
+
+
 
 
 不定期更新中。。。
