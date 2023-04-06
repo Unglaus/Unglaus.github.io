@@ -1,0 +1,86 @@
+<!DOCTYPE html><html lang="zh" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CloudCompare-Cmake | Hexo</title><script>var config = {"root":"/","search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy","copyFinish":"copied","expand":"expand"}}</script><script src="//unpkg.com/mermaid@9.2.2/dist/mermaid.min.js"></script><link rel="stylesheet" href="/css/arknights.css"><script>if (window.localStorage.getItem('theme-mode') === 'light') document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark') document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.ttf");
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head><body><div class="loading" style="opacity: 0"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><nav><div class="navBtn hide"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/about/"><span class="navItemTitle">About</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>CloudCompare-Cmake</h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2023-04-06T13:11:17.000Z" id="date"> 2023-04-06</time></div></span><br><span>Last Update: <div class="control"><time datetime="2023-04-06T14:24:08.136Z" id="updated"> 2023-04-06</time></div></span></div></div><hr><div id="post-content"><p>CloudCompare，后续简称CC</p>
+<h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><h3 id="Qt5"><a href="#Qt5" class="headerlink" title="Qt5"></a>Qt5</h3><p>CC是基于Qt5开发的，所以编译前需要安装Qt5，具体的Qt5版本根据CC源码的版本可能也有不同，需要自己去看源码中build.md文件说明。我要编译的CC版本是2.12.4，该版本的build.md文件提到2.11+版本之后的Qt版本要求为：5.9 &lt;= Qt &lt; 6.0. 所以我直接安装了Qt5的最新版本Qt5.15.2，就用的官网提供的在线安装包，具体的安装教程见“Qt在线安装包配置国内镜像源”</p>
+<h3 id="OpenGL"><a href="#OpenGL" class="headerlink" title="OpenGL"></a>OpenGL</h3><p>OpenGL其实电脑有自带的，但我看Cmake找到的那个自带的好像是win8版本的，不知道好用不好用，我就给他重新配了之前VS安装的win11版本的。这个OpenGL不用特意装，安装Windows SDK就会带着，通过VS installer就可以安。</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230406213202725.png" class="" title="image-20230406213202725">
+
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p>上面两个依赖配置好之后去官方Github下载需要编译的源码，前面也提到过，我选了v2.12.4版本</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230406213413137.png" class="" title="image-20230406213413137">
+
+<p>下下来之后要注意这个其实是不完整的，作者把核心算法库单独拿了出来，放在CCCoreLib项目里。</p>
+<p>我们直接打开下载下来的文件，找到”CloudCompare/libs/qCC_db/extern/“ 目录，会发现里面是空的，但是用Cmake编译的时候他又会报错，告诉你需要这个文件夹中的文件，那如何找到这个项目的位置，只需要在GitHub中找到这个目录的位置，会发现官方在这里给出了超链接，跟着超链接就能找到需要的内容。</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230406214843292.png" class="" title="image-20230406214843292">
+
+<p>点击这个超链接就会跳转到CCCoreLib库的所在，这里直接下载这个默认的即可</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230406214307674.png" class="" title="image-20230406214307674">
+
+<p>之后将下载下来的文件解压到之前空文件夹的位置即可，后面再细说。</p>
+<p>然后这个其实也不是完整的，它里面也有需要去其他地方下载的文件，找到”CCCoreLib/extern/“ 目录，发现里面也有个超链接</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230406215131181.png" class="" title="image-20230406215131181">
+
+<p>这个下载默认的即可，下载下来解压到对应的目录。</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230406215401556.png" class="" title="image-20230406215401556">
+
+
+
+<h3 id="组合"><a href="#组合" class="headerlink" title="组合"></a>组合</h3><p>下载下来一共3个项目</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230406215555439.png" class="" title="image-20230406215555439">
+
+<p>将nanoflann中的内容，全部放到”CCCoreLib-master/extern/nanoflann“目录中</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230406215837581.png" class="" title="image-20230406215837581">
+
+<p>然后再把上面这个组合好的CCCoreLib-master中的内容全部放到”CloudCompare-2.12.4/libs/qCC_db/extern/CCCoreLib“目录里</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230406220053868.png" class="" title="image-20230406220053868">
+
+<p>这样才算是得到完整的能够编译的CC文件，后面就用这个CloudCompare-2.12.4文件夹里的内容做Source，用Cmake编译即可。</p>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>老三样，三个文件夹source、build、install</p>
+<p>Cmake编译，记得把install路径改过来</p>
+<h3 id="配置Qt5路径"><a href="#配置Qt5路径" class="headerlink" title="配置Qt5路径"></a>配置Qt5路径</h3><p>主要是配Qt5_DIR的路径，根据自己的Qt5安装路径来配，我的是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">E:&#x2F;QT5&#x2F;5.15.2&#x2F;msvc2019_64&#x2F;lib&#x2F;cmake&#x2F;Qt5<br></code></pre></td></tr></table></figure>
+
+<p>配完这个之后其他的Qt5路径它就自动识别了</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230406220458490.png" class="" title="image-20230406220458490">
+
+<h4 id="Qt5LinguistTools路径"><a href="#Qt5LinguistTools路径" class="headerlink" title="Qt5LinguistTools路径"></a>Qt5LinguistTools路径</h4><p>有一个除外，每错，就是这个Qt5LinguistTools的路径，明明安装了，而且也跟它识别到的其他的Qt5组件在一个路径里，不知道它为什么自己找不到，需要我们自己再告诉它一下，路径为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">E:&#x2F;QT5&#x2F;5.15.2&#x2F;msvc2019_64&#x2F;lib&#x2F;cmake&#x2F;Qt5LinguistTools<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="配置OpenGL路径"><a href="#配置OpenGL路径" class="headerlink" title="配置OpenGL路径"></a>配置OpenGL路径</h3><p>他其实自己找到了一个路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">C:&#x2F;Program Files (x86)&#x2F;Windows Kits&#x2F;8.0&#x2F;Lib&#x2F;win8&#x2F;um&#x2F;x64<br></code></pre></td></tr></table></figure>
+
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230406221544652.png" class="" title="image-20230406221544652">
+
+<p>但我看他这个路径名，好像是win8的版本吧。。。我不太放心，就用了前面提到的用VS安装的win11版本的，具体路径为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">E:&#x2F;Windows Kits&#x2F;10&#x2F;Lib&#x2F;10.0.22000.0&#x2F;um&#x2F;x64<br></code></pre></td></tr></table></figure>
+
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230406221749652.png" class="" title="image-20230406221749652">
+
+<p>至于具体怎么找到这个路径的，还是用到之前其它教程提到的”everything“，搜索”OpenGL32.lib“，这个文件所在路径即为所求</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230406221949937.png" class="" title="image-20230406221949937">
+
+<p>之后就是一路configure、generate、Open Project老三样</p>
+<p>然后在VS里”ALL_BUILD“右键生成、”INSTALL“右键生成即可</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230406222220907.png" class="" title="image-20230406222220907">
+<div id="paginator"></div></div><div id="post-footer"><div id="pages" style="justify-content: flex-end"><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2023/03/21/WampServer-download/">Wamp安装 Prev →</a></div></div></div></div><div class="bottom-btn"><div><a id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧</a><a id="to-index" href="#toc-div" title="To Catalog">≡</a><a id="color-mode" onClick="colorMode.change()" title="Change Theme"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">Dr.Unglaus</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96"><span class="toc-number">1.</span> <span class="toc-text">依赖</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Qt5"><span class="toc-number">1.1.</span> <span class="toc-text">Qt5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OpenGL"><span class="toc-number">1.2.</span> <span class="toc-text">OpenGL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">源码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD"><span class="toc-number">2.1.</span> <span class="toc-text">下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E5%90%88"><span class="toc-number">2.2.</span> <span class="toc-text">组合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">3.</span> <span class="toc-text">编译</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEQt5%E8%B7%AF%E5%BE%84"><span class="toc-number">3.1.</span> <span class="toc-text">配置Qt5路径</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Qt5LinguistTools%E8%B7%AF%E5%BE%84"><span class="toc-number">3.1.1.</span> <span class="toc-text">Qt5LinguistTools路径</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEOpenGL%E8%B7%AF%E5%BE%84"><span class="toc-number">3.2.</span> <span class="toc-text">配置OpenGL路径</span></a></li></ol></li></ol></div></div><footer><nobr>Published with <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> Theme <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr>by <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/search.js"></script><script class="pjax-js">reset=_=>{code.findCode();}</script><script src="/js/arknights.js"></script><script src="/js/pjax.js"></script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script></body></html>
