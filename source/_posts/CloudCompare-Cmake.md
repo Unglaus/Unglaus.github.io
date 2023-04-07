@@ -120,3 +120,33 @@ E:/Windows Kits/10/Lib/10.0.22000.0/um/x64
 然后在VS里”ALL_BUILD“右键生成、”INSTALL“右键生成即可
 
 ![image-20230406222220907](CloudCompare-Cmake/image-20230406222220907.png)
+
+
+
+## 编译文件说明
+
+编译前的源代码中有xxx.ui文件，可以通过该文件学习其中的界面布局
+
+![image-20230407165943192](CloudCompare-Cmake/image-20230407165943192.png)
+
+可以通过文本编辑器来打开xxx.ui文件，里面是用xml语言写的布局。
+
+![image-20230407170845775](CloudCompare-Cmake/image-20230407170845775.png)
+
+也可以通过Qt Designer打开该xxx.ui文件，直接来看它的布局
+
+![image-20230407171054333](CloudCompare-Cmake/image-20230407171054333.png)
+
+不过上述两种都只能是辅助，比较好的还是要看与xxx.ui文件所对应的ui_xxx.h文件，直接看代码来学，再结合Qt Designer里的布局来学比较好，xml语言还是不太熟，而且一般也不会自己写xml来设计布局吧。。。
+
+而对应的ui_xxx.h文件的生成是靠编译xxx.ui文件产生的，之前我们编译整个项目的时候，它也跟着生成了，编译生成的文件位置就在build文件夹当中
+
+以Source源码中ccViewer子项目中的ccviewer.ui文件为例，其生成的对应的ui_ccviewer.h文件具体位置为` build/ccViewer `
+
+![image-20230407173005272](CloudCompare-Cmake/image-20230407173005272.png)
+
+不过根据具体项目的不同，可能具体位置也有点出入，不过都是编译生成再build文件中
+
+具体的可以通过everything来搜索ui_xxx.h来确定具体的位置。
+
+![image-20230407173607288](CloudCompare-Cmake/image-20230407173607288.png)
