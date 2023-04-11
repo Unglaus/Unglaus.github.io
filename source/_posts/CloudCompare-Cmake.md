@@ -147,6 +147,6 @@ E:/Windows Kits/10/Lib/10.0.22000.0/um/x64
 
 不过根据具体项目的不同，可能具体位置也有点出入，不过都是编译生成再build文件中
 
-具体的可以通过everything来搜索ui_xxx.h来确定具体的位置。
+具体的可以通过everything来搜索ui_xxx.h来确定具体的位置
 
 ![image-20230407173607288](CloudCompare-Cmake/image-20230407173607288.png)
