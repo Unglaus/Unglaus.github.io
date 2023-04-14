@@ -151,3 +151,15 @@ E:/Windows Kits/10/Lib/10.0.22000.0/um/x64
 具体的可以通过everything来搜索ui_xxx.h来确定具体的位置
 
 ![image-20230407173607288](CloudCompare-Cmake/image-20230407173607288.png)
+
+
+
+## 补充
+
+测试了一下编译生成的cloudcompare和ccviewer，发现不能读取pcd文件，而且图标也比安装版的糊，不知道为什么。。。
+
+网上查了下，可能是cmake的时候，有些plug选项没选导致的，我当时编译就按它默认的选项，没多选也没取消选择，下面记录下网上找到的plug选项试一下
+
+![image-20230413162331702](CloudCompare-Cmake/image-20230413162331702.png)
+
+相比之前默认的选项，多选了上面这两项，再编译的时候提示我要配置
