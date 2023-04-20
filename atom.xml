@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2023-04-17T13:18:52.257Z</updated>
+  <updated>2023-04-19T02:53:20.997Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -17,18 +17,44 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>ccviewer学习笔记</title>
+    <link href="http://example.com/2023/04/19/ccViewer-Note/"/>
+    <id>http://example.com/2023/04/19/ccViewer-Note/</id>
+    <published>2023-04-19T02:51:00.000Z</published>
+    <updated>2023-04-19T02:53:20.997Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="代码解析"><a href="#代码解析" class="headerlink" title="代码解析"></a>代码解析</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c++">ccViewer::ccViewer(QWidget *parent, Qt::WindowFlags flags)<br>: QMainWindow(parent, flags)<br>, m_glWindow(<span class="hljs-literal">nullptr</span>)<br>, m_selectedObject(<span class="hljs-literal">nullptr</span>)<br>, m_3dMouseInput(<span class="hljs-literal">nullptr</span>)<br></code></pre></td></tr></table></figure><p>这段代码是一个类 <code>ccViewer</code> 的构造函数的实现，该类是继承自 <code>QMainWindow</code> 类的。</p><p>构造函数的参数 <code>parent</code> 是一个指向父窗口的指针，参数 <code>flags</code> 是窗口的标志。</p><p>下面是成员变量的初始化：</p><ul><li><code>m_glWindow</code> 是一个指向 <code>QOpenGLWidget</code> 对象的指针，初始化为 <code>nullptr</code>。</li><li><code>m_selectedObject</code> 是一个指向选中的对象的指针，初始化为 <code>nullptr</code>。</li><li><code>m_3dMouseInput</code> 是一个指向 <code>Q3DMouseInput</code> 对象的指针，初始化为 <code>nullptr</code>。</li></ul><p>在这个构造函数中，这些成员变量都被初始化为默认值。这些成员变量可以在类的其他成员函数中使用，以实现类的功能。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;代码解析&quot;&gt;&lt;a href=&quot;#代码解析&quot; class=&quot;headerlink&quot; title=&quot;代码解析&quot;&gt;&lt;/a&gt;代码解析&lt;/h2&gt;&lt;figure class=&quot;highlight c++&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;</summary>
+      
+    
+    
+    
+    <category term="笔记" scheme="http://example.com/categories/%E7%AC%94%E8%AE%B0/"/>
+    
+    
+    <category term="Qt" scheme="http://example.com/tags/Qt/"/>
+    
+    <category term="cloudcompare" scheme="http://example.com/tags/cloudcompare/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Qt6学习笔记</title>
     <link href="http://example.com/2023/04/17/Qt6.4-Note/"/>
     <id>http://example.com/2023/04/17/Qt6.4-Note/</id>
     <published>2023-04-17T13:14:46.000Z</published>
-    <updated>2023-04-17T13:18:52.257Z</updated>
+    <updated>2023-04-18T09:38:23.145Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="QAction"><a href="#QAction" class="headerlink" title="QAction"></a>QAction</h2><h3 id="toggled"><a href="#toggled" class="headerlink" title="toggled()"></a>toggled()</h3><p>toggle 类似开关。 具有2个状态，打开/关闭。  使用这个信号，是在这2个状态之间切换。checkable按纽或是图标的槽函数应该用toggled()事件来激活</p><h3 id="triggered"><a href="#triggered" class="headerlink" title="triggered()"></a>triggered()</h3><p>trigger是一次性的。 点击后，无法改变状态。 要么是打开，要么是关闭。一般的按纽（uncheckable）的激活方式即是triggered()。更有触发的意思。这个单词还有另一个意思就是板机</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="随笔"><a href="#随笔" class="headerlink" title="随笔"></a>随笔</h1><h2 id="clicked-、triggered-、toggled-三个信号的区别"><a href="#clicked-、triggered-、toggled-三个信号的区别" class="headerlink" title="clicked()、triggered()、toggled()三个信号的区别"></a>clicked()、triggered()、toggled()三个信号的区别</h2><h3 id="toggled"><a href="#toggled" class="headerlink" title="toggled()"></a>toggled()</h3><p>toggle 类似开关。 具有2个状态，打开/关闭。  使用这个信号，是在这2个状态之间切换。checkable按纽或是图标的槽函数应该用toggled()事件来激活</p><h3 id="triggered"><a href="#triggered" class="headerlink" title="triggered()"></a>triggered()</h3><p>trigger是一次性的。 点击后，无法改变状态。 要么是打开，要么是关闭。一般的按纽（uncheckable）的激活方式即是triggered()。更有触发的意思。这个单词还有另一个意思就是板机</p><h3 id="clicked"><a href="#clicked" class="headerlink" title="clicked()"></a>clicked()</h3><p>和triggered()用法一样，使用场景不同，triggered() 正常情况下应该广泛地多，比如快捷键等</p><h1 id="Qt-Designer使用"><a href="#Qt-Designer使用" class="headerlink" title="Qt Designer使用"></a>Qt Designer使用</h1><h2 id="菜单栏、工具栏的创建"><a href="#菜单栏、工具栏的创建" class="headerlink" title="菜单栏、工具栏的创建"></a>菜单栏、工具栏的创建</h2><p>创建新项目时，其实已经帮我们默认创建好菜单栏、工具栏和状态栏了。菜单栏在窗口顶部，可以看到“在这里输入”的提示，那一栏就是菜单栏的位置，其对象名为menuBar，可以在右侧对象检查器中看到，菜单栏只能有一个。工具栏在菜单栏下面紧挨着，初始也帮我们建了一个，对象名为mainToolBar，工具栏可以有多个，想创建的话，在主对象上右键-&gt;创建工具栏即可。状态栏我不知道在哪，不过这东西也只能有一个，且初始帮我们创建了，对象名为statusBar。</p><img src="/2023/04/17/Qt6.4-Note/image-20230418164800697.png" class="" title="image-20230418164800697"><p>在主对象上右键-&gt;添加工具栏以添加新的工具栏，状态栏因为已经有了所以这里显示”移除状态栏”，菜单栏也因为已经有了直接不显示，若初始没有菜单栏，这里右键就能看到“创建菜单栏”的选项。</p><img src="/2023/04/17/Qt6.4-Note/image-20230418171053498.png" class="" title="image-20230418171053498"><p>在菜单栏的“在这里输入”中输入具体的内容，如option。这时右侧menuBar下会多一栏menuoption，而且点击菜单栏的option，该栏会展开，一开始也是只有“在这里输入”和“添加分隔符”两项内容，在里面输入具体内容之后就相当于给它们创建了实体，如这里我输入了option1和option2，这种就算是具体的动作了，创建这两个的同时，不光右侧对象检查器的menuoption栏下会多两个QAction：actionoption1和actionoption2，动作编辑器中也会多出两项：actionoption1和actionoption2。另外，option1右侧可以看到蓝色的小加号，点击之后可以将option1再展开，通过“在这里输入”输入具体的名称，继续添加具体的项。</p><p>之后将具体的对象与槽函数连接来实现具体功能即可。</p><img src="/2023/04/17/Qt6.4-Note/image-20230418173258431.png" class="" title="image-20230418173258431">]]></content>
     
     
       
       
-    <summary type="html">&lt;h2 id=&quot;QAction&quot;&gt;&lt;a href=&quot;#QAction&quot; class=&quot;headerlink&quot; title=&quot;QAction&quot;&gt;&lt;/a&gt;QAction&lt;/h2&gt;&lt;h3 id=&quot;toggled&quot;&gt;&lt;a href=&quot;#toggled&quot; class=&quot;headerlink</summary>
+    <summary type="html">&lt;h1 id=&quot;随笔&quot;&gt;&lt;a href=&quot;#随笔&quot; class=&quot;headerlink&quot; title=&quot;随笔&quot;&gt;&lt;/a&gt;随笔&lt;/h1&gt;&lt;h2 id=&quot;clicked-、triggered-、toggled-三个信号的区别&quot;&gt;&lt;a href=&quot;#clicked-、triggered</summary>
       
     
     
@@ -263,9 +289,9 @@
     <category term="问题记录" scheme="http://example.com/categories/%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/"/>
     
     
-    <category term="Qt" scheme="http://example.com/tags/Qt/"/>
-    
     <category term="PCL" scheme="http://example.com/tags/PCL/"/>
+    
+    <category term="Qt" scheme="http://example.com/tags/Qt/"/>
     
     <category term="VTK" scheme="http://example.com/tags/VTK/"/>
     
