@@ -7,7 +7,7 @@ if (window.localStorage.getItem('theme-mode') === 'dark') document.documentEleme
  font-family: 'JetBrains Mono';
  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
 }</style><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-</head><body><div class="loading" style="opacity: 0"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><nav><div class="navBtn hide"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/about/"><span class="navItemTitle">About</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>编译CloudCompare</h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2023-04-06T13:11:17.000Z" id="date"> 2023-04-06</time></div></span><br><span>Last Update: <div class="control"><time datetime="2023-04-18T07:19:48.311Z" id="updated"> 2023-04-18</time></div></span></div></div><hr><div id="post-content"><p>CloudCompare，后续简称CC</p>
+</head><body><div class="loading" style="opacity: 0"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><nav><div class="navBtn hide"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/about/"><span class="navItemTitle">About</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>编译CloudCompare</h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2023-04-06T13:11:17.000Z" id="date"> 2023-04-06</time></div></span><br><span>Last Update: <div class="control"><time datetime="2023-05-12T12:45:29.359Z" id="updated"> 2023-05-12</time></div></span></div></div><hr><div id="post-content"><p>CloudCompare，后续简称CC</p>
 <h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><h3 id="Qt5"><a href="#Qt5" class="headerlink" title="Qt5"></a>Qt5</h3><p>CC是基于Qt5开发的，所以编译前需要安装Qt5，具体的Qt5版本根据CC源码的版本可能也有不同，需要自己去看源码中build.md文件说明。我要编译的CC版本是2.12.4，该版本的build.md文件提到2.11+版本之后的Qt版本要求为：5.9 &lt;= Qt &lt; 6.0. 所以我直接安装了Qt5的最新版本Qt5.15.2，就用的官网提供的在线安装包，具体的安装教程见“Qt在线安装包配置国内镜像源”。</p>
 <h3 id="OpenGL"><a href="#OpenGL" class="headerlink" title="OpenGL"></a>OpenGL</h3><p>OpenGL其实电脑有自带的，但我看Cmake找到的那个自带的好像是win8版本的，不知道好用不好用，我就给他重新配了之前VS安装的win11版本的。这个OpenGL不用特意装，安装Windows SDK就会带着，通过VS installer就可以安。</p>
 <img src="/2023/04/06/CloudCompare-Cmake/image-20230406213202725.png" class="" title="image-20230406213202725">
@@ -98,6 +98,44 @@ if (window.localStorage.getItem('theme-mode') === 'dark') document.documentEleme
 <img src="/2023/04/06/CloudCompare-Cmake/image-20230413162331702.png" class="" title="image-20230413162331702">
 
 <p>相比之前默认的选项，多选了上面这两项，再编译的时候提示我要配置</p>
+<p>更正，除了上面两项还选了PCL，我这次先试试只配置PCL看看能不能读取pcd文件</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230421114513526.png" class="" title="image-20230421114513526">
+
+<p>配置pcl位置</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230421114707927.png" class="" title="image-20230421114707927">
+
+<p>报错力</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230421122132860-1682053102945-1.png" class="" title="image-20230421122132860">
+
+<p>可能是我自己重新编译的问题？我重安一遍官方提供的试试</p>
+<p>还真是，我重新配了一下官方安装版就编译通过了</p>
+<p>但之后发现还是没法读取pcd文件，于是这次打算再把PLUGIN_IO_QPDAL选上试试</p>
+<p>结果被QPDAL的安装难倒了，不想搞这个了</p>
+<p>我又查了查好像不需要，还是只用PCL就行，不过可能需要把PCL重新编译一下，然后选个IO之类的东西给激活。</p>
+<p>看了看官方回复，应该不用重新编译PCL，项目里有PCL_IO_PLUGIN，不知道为什么还是不行</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230421163243751.png" class="" title="image-20230421163243751">
+
+<p>通过师兄的指引，点开具体的项目文件来查看，发现QPCL_IO_PLUGIN中的文件有报错，而输出又没显示，所以一直都被我忽略了。</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230512203546468.png" class="" title="image-20230512203546468">
+
+<p>错误提示为”<strong>C++ 命令行错误: 宏定义无效: BOOST_ALL_NO_LIB-DBOOST_ALL_NO_LIB</strong>“</p>
+<p>去查了一下这个问题，通过修改PCL安装目录下cmake目录，里面有个PCLConfig.cmake文件，定位到该文件的第130行。将**if(WIN32 AND NOT MINGW)<strong>替换成</strong>if(WIN32 AND NOT MINGW AND NOT “${BOOST_DEFINITIONS}” MATCHES “BOOST_ALL_NO_LIB”)**。这样就不会报上述错误了。</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230512204528335.png" class="" title="image-20230512204528335">
+
+<p>但是编译之后还是不行，仍然没法读PCD格式的文件。</p>
+<p>不过插件的位置倒是出现PCL的部分了，也算是一点进步，但还是识别不到PCD格式真不知道是哪里的问题。。。</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230512204107321.png" class="" title="image-20230512204107321">
+
+<p>又注意到cmake编译时第一句”Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.22621.“ </p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230512202314854.png" class="" title="image-20230512202314854">
+
+<p>我去看了一下确实没安Windows 10.0.22621版本的SDK，然后我又去重新安了一下这个版本的SDK</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230512202833414.png" class="" title="image-20230512202833414">
+
+<p>安完这个SDK之后，再来编译发现确实不太一样</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230512203003590.png" class="" title="image-20230512203003590">
+
+<p>但最后结果一样的，还是不行，pcd格式识别 不了。</p>
 <div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2023/04/17/Qt6.4-Note/">← Next Qt6学习笔记</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2023/03/21/WampServer-download/">Wamp安装 Prev →</a></div></div></div></div><div class="bottom-btn"><div><a id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧</a><a id="to-index" href="#toc-div" title="To Catalog">≡</a><a id="color-mode" onClick="colorMode.change()" title="Change Theme"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">Dr.Unglaus</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96"><span class="toc-number">1.</span> <span class="toc-text">依赖</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Qt5"><span class="toc-number">1.1.</span> <span class="toc-text">Qt5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OpenGL"><span class="toc-number">1.2.</span> <span class="toc-text">OpenGL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">源码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD"><span class="toc-number">2.1.</span> <span class="toc-text">下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E5%90%88"><span class="toc-number">2.2.</span> <span class="toc-text">组合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">3.</span> <span class="toc-text">编译</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEQt5%E8%B7%AF%E5%BE%84"><span class="toc-number">3.1.</span> <span class="toc-text">配置Qt5路径</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Qt5LinguistTools%E8%B7%AF%E5%BE%84"><span class="toc-number">3.1.1.</span> <span class="toc-text">Qt5LinguistTools路径</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEOpenGL%E8%B7%AF%E5%BE%84"><span class="toc-number">3.2.</span> <span class="toc-text">配置OpenGL路径</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E6%96%87%E4%BB%B6%E8%AF%B4%E6%98%8E"><span class="toc-number">4.</span> <span class="toc-text">编译文件说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A5%E5%85%85"><span class="toc-number">5.</span> <span class="toc-text">补充</span></a></li></ol></div></div><footer><nobr>Published with <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> Theme <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr>by <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/search.js"></script><script class="pjax-js">reset=_=>{code.findCode();}</script><script src="/js/arknights.js"></script><script src="/js/pjax.js"></script><script>window.addEventListener("load",() => {pjax = new Pjax({
  cacheBust: false,
  selectors: ['title','article','#aside-block','.pjax-js'],
