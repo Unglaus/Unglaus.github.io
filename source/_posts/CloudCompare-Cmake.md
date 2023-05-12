@@ -188,3 +188,35 @@ E:/Windows Kits/10/Lib/10.0.22000.0/um/x64
 看了看官方回复，应该不用重新编译PCL，项目里有PCL_IO_PLUGIN，不知道为什么还是不行
 
 ![image-20230421163243751](CloudCompare-Cmake/image-20230421163243751.png)
+
+通过师兄的指引，点开具体的项目文件来查看，发现QPCL_IO_PLUGIN中的文件有报错，而输出又没显示，所以一直都被我忽略了。
+
+![image-20230512203546468](CloudCompare-Cmake/image-20230512203546468.png)
+
+错误提示为”**C++ 命令行错误: 宏定义无效: BOOST_ALL_NO_LIB-DBOOST_ALL_NO_LIB**“
+
+去查了一下这个问题，通过修改PCL安装目录下cmake目录，里面有个PCLConfig.cmake文件，定位到该文件的第130行。将**if(WIN32 AND NOT MINGW)**替换成**if(WIN32 AND NOT MINGW AND NOT "${BOOST_DEFINITIONS}" MATCHES "BOOST_ALL_NO_LIB")**。这样就不会报上述错误了。
+
+![image-20230512204528335](CloudCompare-Cmake/image-20230512204528335.png)
+
+但是编译之后还是不行，仍然没法读PCD格式的文件。
+
+不过插件的位置倒是出现PCL的部分了，也算是一点进步，但还是识别不到PCD格式真不知道是哪里的问题。。。
+
+![image-20230512204107321](CloudCompare-Cmake/image-20230512204107321.png)
+
+又注意到cmake编译时第一句”Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.22621.“ 
+
+![image-20230512202314854](CloudCompare-Cmake/image-20230512202314854.png)
+
+我去看了一下确实没安Windows 10.0.22621版本的SDK，然后我又去重新安了一下这个版本的SDK
+
+
+
+![image-20230512202833414](CloudCompare-Cmake/image-20230512202833414.png)
+
+安完这个SDK之后，再来编译发现确实不太一样
+
+![image-20230512203003590](CloudCompare-Cmake/image-20230512203003590.png)
+
+但最后结果一样的，还是不行，pcd格式识别 不了。
