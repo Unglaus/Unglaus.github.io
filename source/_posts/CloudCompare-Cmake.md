@@ -13,7 +13,7 @@ CloudCompare，后续简称CC
 
 CC是基于Qt5开发的，所以编译前需要安装Qt5，具体的Qt5版本根据CC源码的版本可能也有不同，需要自己去看源码中build.md文件说明。我要编译的CC版本是2.12.4，该版本的build.md文件提到2.11+版本之后的Qt版本要求为：5.9 <= Qt < 6.0. 所以我直接安装了Qt5的最新版本Qt5.15.2，就用的官网提供的在线安装包，具体的安装教程见“Qt在线安装包配置国内镜像源”。
 
-### OpenGL
+### OpenGL（可跳过）
 
 OpenGL其实电脑有自带的，但我看Cmake找到的那个自带的好像是win8版本的，不知道好用不好用，我就给他重新配了之前VS安装的win11版本的。这个OpenGL不用特意装，安装Windows SDK就会带着，通过VS installer就可以安。
 
@@ -91,9 +91,13 @@ E:/QT5/5.15.2/msvc2019_64/lib/cmake/Qt5
 E:/QT5/5.15.2/msvc2019_64/lib/cmake/Qt5LinguistTools
 ```
 
+#### 补充
 
+其实只要在环境变量path中，将需要的Qt5版本对应的bin路径配置好，cmake的时候是会自动找到相应Qt5路径的，也不会找不到出现上述找不到Qt5LinguistTools路径的这个问题。
 
-### 配置OpenGL路径
+![image-20230517194556596](CloudCompare-Cmake/image-20230517194556596.png)
+
+### 配置OpenGL路径（可跳过）
 
 他其实自己找到了一个路径
 
@@ -114,6 +118,12 @@ E:/Windows Kits/10/Lib/10.0.22000.0/um/x64
 至于具体怎么找到这个路径的，还是用到之前其它教程提到的”everything“，搜索”OpenGL32.lib“，这个文件所在路径即为所求
 
 ![image-20230406221949937](CloudCompare-Cmake/image-20230406221949937.png)
+
+**补充：**不过通过后续的实验来看，就用这个默认的就行，不用非得换。。。
+
+
+
+### Build
 
 之后就是一路configure、generate、Open Project老三样
 
@@ -153,45 +163,97 @@ E:/Windows Kits/10/Lib/10.0.22000.0/um/x64
 
 
 
-## 补充
+## 编译PCL插件
 
-测试了一下编译生成的cloudcompare和ccviewer，发现不能读取pcd文件，而且图标也比安装版的糊，不知道为什么。。。
+测试了一下编译生成的cloudcompare和ccviewer，发现不能读取pcd文件，（而且图标也比安装版的糊，不知道为什么。。。）
 
-网上查了下，可能是cmake的时候，有些plug选项没选导致的，我当时编译就按它默认的选项，没多选也没取消选择，下面记录下网上找到的plug选项试一下
-
-![image-20230413162331702](CloudCompare-Cmake/image-20230413162331702.png)
-
-相比之前默认的选项，多选了上面这两项，再编译的时候提示我要配置
-
-更正，除了上面两项还选了PCL，我这次先试试只配置PCL看看能不能读取pcd文件
+通过查阅资料，cc读取pcd文件是通过调用pcl功能实现的，所以在编译时，需要在PLUGIN栏中勾选QPCL选项。
 
 ![image-20230421114513526](CloudCompare-Cmake/image-20230421114513526.png)
 
-配置pcl位置
+顺便提一嘴，这个GUI界面红色那部分上面有个“Grouped”，把这个勾选上就能将每一项分好组，找起来比较有条理，这里我一开始没选，每一项就都挤在一块了
+
+选了QPCL这一项之后再Configure，就会根据系统环境变量里的PCL路径配置PCL相关的路径
+
+![image-20230517200157590](CloudCompare-Cmake/image-20230517200157590.png)
+
+之后再configure，没有问题就generate+open Project即可。
+
+注意这里用的PCL就用官方提供的AllInOne版本安装的一系列PCL文件，不要用自己编译的那些，没有必要。
+
+之后就是在VS中，All_BUILD、INSTALL
+
+检查一下install文件夹中，生成的cc相关exe所在位置是否有**OpenNI2.dll**文件，如果没有，用“everything”找到这个文件，把它复制过来。
+
+![image-20230517201136465](CloudCompare-Cmake/image-20230517201136465.png)
+
+至此编译生成的cc和ccviewer就可以读取pcd文件，使用pcl插件的功能了
+
+![image-20230517201536852](CloudCompare-Cmake/image-20230517201536852.png)
+
+### 过程中遇到的问题
+
+#### pcl路径的选择
+
+一开始我直接用了之前自己重新编译过的pcl，即E盘下的pcl所在位置：
 
 ![image-20230421114707927](CloudCompare-Cmake/image-20230421114707927.png)
 
-报错力
+结果配置好，点configure，报错力：
 
 ![image-20230421122132860](CloudCompare-Cmake/image-20230421122132860-1682053102945-1.png)
 
-可能是我自己重新编译的问题？我重安一遍官方提供的试试
+可能编译的时候有些东西没弄好导致后续像cc这种第三方要调用的时候，一些东西匹配不上，导致报错。
 
-还真是，我重新配了一下官方安装版就编译通过了
+于是我又去pcl官方下了AllInOne版本安装包，并把它安在D盘，稍稍区分一下
 
-但之后发现还是没法读取pcd文件，于是这次打算再把PLUGIN_IO_QPDAL选上试试
+![image-20230517202635310](CloudCompare-Cmake/image-20230517202635310.png)
 
-结果被QPDAL的安装难倒了，不想搞这个了
+安好之后，编译选择pcl路径时都用D盘这个AllInOne版本的，就没有问题，直接就编译通过了。。。
 
-我又查了查好像不需要，还是只用PCL就行，不过可能需要把PCL重新编译一下，然后选个IO之类的东西给激活。
+#### 生成的cc.exe读取不了pcd文件
 
-看了看官方回复，应该不用重新编译PCL，项目里有PCL_IO_PLUGIN，不知道为什么还是不行
+可以看到ALL_BUILD显示全部成功。
+
+![image-20230517203958182](CloudCompare-Cmake/image-20230517203958182.png)
+
+INSTALL也都没有问题。
+
+![image-20230517204337940](CloudCompare-Cmake/image-20230517204337940.png)
+
+题外话，生成INSTALL的时候可以不要直接右键->生成，而是选仅用于项目->仅生成INSTALL，这样即可在install文件夹中生成相应的目标文件，而且会快很多。上图其实就是仅用于项目->仅生成INSTALL的结果。
+
+![image-20230517204135730](CloudCompare-Cmake/image-20230517204135730.png)
+
+但是生成的cc.exe在读取pcd文件时会报错。
+
+![image-20230517204453563](CloudCompare-Cmake/image-20230517204453563.png)
+
+而且打开文件选项中也确实找不到pcd选项。
+
+![image-20230517204600853](CloudCompare-Cmake/image-20230517204600853.png)
+
+下面就开始了漫长的找问题环节。
+
+##### QPCL_IO_PLUGIN
+
+百度这个问题的时候，一个链接跳转到了cc官方开发人员的一个相同问题的回复，题主也是读取不了pcd文件，但是通过他们问答发现，他其实是没编译QPCL_IO_PLUGIN这部分导致的，但我已经都生成过了，所以其实不是这方面的问题。
+
+不过还是了解到了与读取pcd文件相关的部分，就是生成文件中QPCL_IO_PLUGIN这部分
 
 ![image-20230421163243751](CloudCompare-Cmake/image-20230421163243751.png)
 
-通过师兄的指引，点开具体的项目文件来查看，发现QPCL_IO_PLUGIN中的文件有报错，而输出又没显示，所以一直都被我忽略了。
+我还特意去看了install文件夹中，相应位置也都生成了相关的dll文件
+
+![image-20230517212530860](CloudCompare-Cmake/image-20230517212530860.png)
+
+然后点开了这部分具体的项目文件来查看（这一看不要紧，后续好多路直接走歪了）
 
 ![image-20230512203546468](CloudCompare-Cmake/image-20230512203546468.png)
+
+发现QPCL_IO_PLUGIN中的文件有报错，而输出又没显示，ALL_BUILD也都显示是成功，所以一直都被我忽略了。
+
+![image-20230517205156521](CloudCompare-Cmake/image-20230517205156521.png)
 
 错误提示为”**C++ 命令行错误: 宏定义无效: BOOST_ALL_NO_LIB-DBOOST_ALL_NO_LIB**“
 
@@ -201,9 +263,7 @@ E:/Windows Kits/10/Lib/10.0.22000.0/um/x64
 
 但是编译之后还是不行，仍然没法读PCD格式的文件。
 
-不过插件的位置倒是出现PCL的部分了，也算是一点进步，但还是识别不到PCD格式真不知道是哪里的问题。。。
-
-![image-20230512204107321](CloudCompare-Cmake/image-20230512204107321.png)
+##### SDK（显然不是）
 
 又注意到cmake编译时第一句”Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.22621.“ 
 
@@ -219,4 +279,73 @@ E:/Windows Kits/10/Lib/10.0.22000.0/um/x64
 
 ![image-20230512203003590](CloudCompare-Cmake/image-20230512203003590.png)
 
-但最后结果一样的，还是不行，pcd格式识别 不了。
+但最后结果一样的，还是不行，pcd格式识别不了。
+
+##### VS版本（显然不是）
+
+有人提到说qt5.15.2对应的版本是msvc2019，我用vs2022来编译是不有问题？我一开始是不屑的，但当我死活调不出来时，我也怀疑是不是跟这玄学有点关系？于是我又安了个vs2019来做编译环境，结果一样的，还是不行。然后也提到过我安的东西有点多？可能哪些东西冲突了？具体指什么有点多我其实也不知道。。。一开始我也是不屑的，可还是找不到原因，那快试试吧。然后安了个虚拟机，配了win10的环境，配win10环境是我怀疑是不是win11的编译环境有点问题，然后在安好vs2019、cmake、cc源码、qt5、pcl，只安了编译cc需要的东西，折腾一天多。然后编译出来的cc.exe还是读不了pcd文件。
+
+虽说花了一天多有点亏，但也让我确信，肯定跟上面vs版本、编译环境多之类的问题无关<span style="background:#000000;color:black" >（怎么可能是这种问题。。。真是这种问题我也不是没遇到过，应该是能看出来的，我就是太容易被别人的意见影响，尤其不知道对面深浅的时候，容易把对面的意见当真）</span>
+
+主要是肯定了我之前配置的环境什么的都没有问题，毕竟之前又说我vs版本，又说东西安的有点多，搞得我好像是外行，不知道自己在干嘛一样。。。
+
+后续就是专心找到底是哪里出了问题。
+
+##### GitHub-issues
+
+慢慢学会了去cc官方的GitHub中，有专门的答疑区，即“issues”，其中有各种关于cc这个项目的问题、建议即答疑
+
+![image-20230517211729424](CloudCompare-Cmake/image-20230517211729424.png)
+
+通过对其中众多帖子的浏览，找了3、4个相关问题的答疑帖来看，大致有了点思路。
+
+打开自己编译生成的有问题的cc.exe文件，观察下方的控制台输出
+
+![image-20230517212034556](CloudCompare-Cmake/image-20230517212034556.png)
+
+比较正常能够读取pcd文件官方下载版的cc.exe来看
+
+![image-20230517212334064](CloudCompare-Cmake/image-20230517212334064.png)
+
+这样配合cc开发这的回答，基本可以确认就是这个QPCL_IO_PLUGIN.dll没有被正确识别为插件，导致的没法读取pcd文件。
+
+然后我又针对这个问题开始查资料，cc开发这提到可能是缺少qcl相关的dll导致没有程序没有把QPCL_IO_PLUGIN.dll正确识别为插件。但我去检查了，pcl相关的dll都已经加载到cc.exe所在位置了
+
+![image-20230517213136660](CloudCompare-Cmake/image-20230517213136660.png)
+
+cc开发者还提到了一个判断dll缺失的工具“dependency walker”，通过把想要查看的dll或exe拖到该工具中，帮助快速查看缺少哪些dll文件。
+
+![image-20230517213827451](CloudCompare-Cmake/image-20230517213827451.png)
+
+但其实到最后我也没搞明白这东西怎么用。。。
+
+##### OpenNI2.dll
+
+最后解决问题还是靠的CSDN上国人写的帖子，他在其中也提到了这种插件加载失败的问题，并给出了解决办法：找不到PCL相关插件的时候，把OpenNI2.dll添加到cc.exe所在位置。
+
+我去看了眼生成的文件中，cc.exe所在位置中的确没有OpenNI2.dll，于是去当时OpenNI2的安装路径中找到该文件（当然是everything来找的），把它复制到了cc.exe所在位置
+
+![image-20230517214455957](CloudCompare-Cmake/image-20230517214455957.png)
+
+然后再打开cc.exe，查看支持的打开文件类型，奇迹出现了
+
+![image-20230517214658045](CloudCompare-Cmake/image-20230517214658045.png)
+
+再看一眼控制台，这次插件也确实地加载上了
+
+![image-20230517214844705](CloudCompare-Cmake/image-20230517214844705.png)
+
+#### 总结
+
+通过上面结果来看，竟然真是缺了OpenNI2.dll导致的。。。难蚌。
+
+所以之前编译等等一系列步骤其实都没有问题，包括前面提到的点开具体QPCL_IO_PLUGIN项目有报错的问题，也不用在意。毕竟ALL_BUILD下面确实都显示成功了。
+
+应该就是OpenNI2这个东西比较“各色”，之前安装pcl的时候它就表现不凡，跟别人的安装过程、位置都不一样。所以在INSTALL的过程中，虽然pcl相关的dll都正常加载到了cc.exe所在的位置，而这个OpenNI2.dll并没有被INSTALL加载过去。不过师兄说他直接编译成功了，那看来他的INSTALL有正确的把OpenNI2.dll加载过去？也可能师兄的环境变量path里配置了OpenNI2的环境？具体不太清楚，可能还有哪里有点问题，导致我的INSTALL没有正确加载OpenNI2.dll。不过鉴于我在舍友电脑、宿舍电脑、虚拟机电脑、工位电脑都试过，结果这个INSTALL都没把OpenNI2.dll加载过去来看，我倾向于是师兄比我多配置了点环境变量（maybe？）。当然也可能就是我哪步有点问题？（不可能啊。。。）
+
+另外从帮我解决问题的CSDN帖子的题主的描述来看，他是通过之前提到“Dependency Walker”检查出来的，但通过我的体验来看，“Dependency Walker”丝毫没有给我提示过缺少OpenNI2.dll的问题。
+
+当然可能是我没学会怎么用，感觉可以后续试着找找资料学一下，就像题主说的：“怎么才能知道exe运行缺什么dll？有时exe自己会提示，但是有些偏不提示，我们也不是神仙，也猜不到，那就用Dependency Walker检查一下”
+
+后续开发遇到相关问题也能比较好下手。
+
