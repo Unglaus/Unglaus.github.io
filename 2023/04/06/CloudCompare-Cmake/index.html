@@ -7,9 +7,9 @@ if (window.localStorage.getItem('theme-mode') === 'dark') document.documentEleme
  font-family: 'JetBrains Mono';
  src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
 }</style><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-</head><body><div class="loading" style="opacity: 0"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><nav><div class="navBtn hide"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/about/"><span class="navItemTitle">About</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>编译CloudCompare</h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2023-04-06T13:11:17.000Z" id="date"> 2023-04-06</time></div></span><br><span>Last Update: <div class="control"><time datetime="2023-05-12T12:45:29.359Z" id="updated"> 2023-05-12</time></div></span></div></div><hr><div id="post-content"><p>CloudCompare，后续简称CC</p>
+</head><body><div class="loading" style="opacity: 0"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><nav><div class="navBtn hide"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/about/"><span class="navItemTitle">About</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>编译CloudCompare</h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2023-04-06T13:11:17.000Z" id="date"> 2023-04-06</time></div></span><br><span>Last Update: <div class="control"><time datetime="2023-05-17T14:09:24.113Z" id="updated"> 2023-05-17</time></div></span></div></div><hr><div id="post-content"><p>CloudCompare，后续简称CC</p>
 <h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><h3 id="Qt5"><a href="#Qt5" class="headerlink" title="Qt5"></a>Qt5</h3><p>CC是基于Qt5开发的，所以编译前需要安装Qt5，具体的Qt5版本根据CC源码的版本可能也有不同，需要自己去看源码中build.md文件说明。我要编译的CC版本是2.12.4，该版本的build.md文件提到2.11+版本之后的Qt版本要求为：5.9 &lt;= Qt &lt; 6.0. 所以我直接安装了Qt5的最新版本Qt5.15.2，就用的官网提供的在线安装包，具体的安装教程见“Qt在线安装包配置国内镜像源”。</p>
-<h3 id="OpenGL"><a href="#OpenGL" class="headerlink" title="OpenGL"></a>OpenGL</h3><p>OpenGL其实电脑有自带的，但我看Cmake找到的那个自带的好像是win8版本的，不知道好用不好用，我就给他重新配了之前VS安装的win11版本的。这个OpenGL不用特意装，安装Windows SDK就会带着，通过VS installer就可以安。</p>
+<h3 id="OpenGL（可跳过）"><a href="#OpenGL（可跳过）" class="headerlink" title="OpenGL（可跳过）"></a>OpenGL（可跳过）</h3><p>OpenGL其实电脑有自带的，但我看Cmake找到的那个自带的好像是win8版本的，不知道好用不好用，我就给他重新配了之前VS安装的win11版本的。这个OpenGL不用特意装，安装Windows SDK就会带着，通过VS installer就可以安。</p>
 <img src="/2023/04/06/CloudCompare-Cmake/image-20230406213202725.png" class="" title="image-20230406213202725">
 
 <h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p>上面两个依赖配置好之后去官方Github下载需要编译的源码，前面也提到过，我选了v2.12.4版本</p>
@@ -52,9 +52,10 @@ if (window.localStorage.getItem('theme-mode') === 'dark') document.documentEleme
 <h4 id="Qt5LinguistTools路径"><a href="#Qt5LinguistTools路径" class="headerlink" title="Qt5LinguistTools路径"></a>Qt5LinguistTools路径</h4><p>有一个除外，每错，就是这个Qt5LinguistTools的路径，明明安装了，而且也跟它识别到的其他的Qt5组件在一个路径里，不知道它为什么自己找不到，需要我们自己再告诉它一下，路径为</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">E:&#x2F;QT5&#x2F;5.15.2&#x2F;msvc2019_64&#x2F;lib&#x2F;cmake&#x2F;Qt5LinguistTools<br></code></pre></td></tr></table></figure>
 
+<h4 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h4><p>其实只要在环境变量path中，将需要的Qt5版本对应的bin路径配置好，cmake的时候是会自动找到相应Qt5路径的，也不会找不到出现上述找不到Qt5LinguistTools路径的这个问题。</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517194556596.png" class="" title="image-20230517194556596">
 
-
-<h3 id="配置OpenGL路径"><a href="#配置OpenGL路径" class="headerlink" title="配置OpenGL路径"></a>配置OpenGL路径</h3><p>他其实自己找到了一个路径</p>
+<h3 id="配置OpenGL路径（可跳过）"><a href="#配置OpenGL路径（可跳过）" class="headerlink" title="配置OpenGL路径（可跳过）"></a>配置OpenGL路径（可跳过）</h3><p>他其实自己找到了一个路径</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">C:&#x2F;Program Files (x86)&#x2F;Windows Kits&#x2F;8.0&#x2F;Lib&#x2F;win8&#x2F;um&#x2F;x64<br></code></pre></td></tr></table></figure>
 
 <img src="/2023/04/06/CloudCompare-Cmake/image-20230406221544652.png" class="" title="image-20230406221544652">
@@ -67,7 +68,8 @@ if (window.localStorage.getItem('theme-mode') === 'dark') document.documentEleme
 <p>至于具体怎么找到这个路径的，还是用到之前其它教程提到的”everything“，搜索”OpenGL32.lib“，这个文件所在路径即为所求</p>
 <img src="/2023/04/06/CloudCompare-Cmake/image-20230406221949937.png" class="" title="image-20230406221949937">
 
-<p>之后就是一路configure、generate、Open Project老三样</p>
+<p><strong>补充：</strong>不过通过后续的实验来看，就用这个默认的就行，不用非得换。。。</p>
+<h3 id="Build"><a href="#Build" class="headerlink" title="Build"></a>Build</h3><p>之后就是一路configure、generate、Open Project老三样</p>
 <p>然后在VS里”ALL_BUILD“右键生成、”INSTALL“右键生成即可</p>
 <img src="/2023/04/06/CloudCompare-Cmake/image-20230406222220907.png" class="" title="image-20230406222220907">
 
@@ -93,40 +95,69 @@ if (window.localStorage.getItem('theme-mode') === 'dark') document.documentEleme
 
 
 
-<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>测试了一下编译生成的cloudcompare和ccviewer，发现不能读取pcd文件，而且图标也比安装版的糊，不知道为什么。。。</p>
-<p>网上查了下，可能是cmake的时候，有些plug选项没选导致的，我当时编译就按它默认的选项，没多选也没取消选择，下面记录下网上找到的plug选项试一下</p>
-<img src="/2023/04/06/CloudCompare-Cmake/image-20230413162331702.png" class="" title="image-20230413162331702">
-
-<p>相比之前默认的选项，多选了上面这两项，再编译的时候提示我要配置</p>
-<p>更正，除了上面两项还选了PCL，我这次先试试只配置PCL看看能不能读取pcd文件</p>
+<h2 id="编译PCL插件"><a href="#编译PCL插件" class="headerlink" title="编译PCL插件"></a>编译PCL插件</h2><p>测试了一下编译生成的cloudcompare和ccviewer，发现不能读取pcd文件，（而且图标也比安装版的糊，不知道为什么。。。）</p>
+<p>通过查阅资料，cc读取pcd文件是通过调用pcl功能实现的，所以在编译时，需要在PLUGIN栏中勾选QPCL选项。</p>
 <img src="/2023/04/06/CloudCompare-Cmake/image-20230421114513526.png" class="" title="image-20230421114513526">
 
-<p>配置pcl位置</p>
+<p>顺便提一嘴，这个GUI界面红色那部分上面有个“Grouped”，把这个勾选上就能将每一项分好组，找起来比较有条理，这里我一开始没选，每一项就都挤在一块了</p>
+<p>选了QPCL这一项之后再Configure，就会根据系统环境变量里的PCL路径配置PCL相关的路径</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517200157590.png" class="" title="image-20230517200157590">
+
+<p>之后再configure，没有问题就generate+open Project即可。</p>
+<p>注意这里用的PCL就用官方提供的AllInOne版本安装的一系列PCL文件，不要用自己编译的那些，没有必要。</p>
+<p>之后就是在VS中，All_BUILD、INSTALL</p>
+<p>检查一下install文件夹中，生成的cc相关exe所在位置是否有<strong>OpenNI2.dll</strong>文件，如果没有，用“everything”找到这个文件，把它复制过来。</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517201136465.png" class="" title="image-20230517201136465">
+
+<p>至此编译生成的cc和ccviewer就可以读取pcd文件，使用pcl插件的功能了</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517201536852.png" class="" title="image-20230517201536852">
+
+<h3 id="过程中遇到的问题"><a href="#过程中遇到的问题" class="headerlink" title="过程中遇到的问题"></a>过程中遇到的问题</h3><h4 id="pcl路径的选择"><a href="#pcl路径的选择" class="headerlink" title="pcl路径的选择"></a>pcl路径的选择</h4><p>一开始我直接用了之前自己重新编译过的pcl，即E盘下的pcl所在位置：</p>
 <img src="/2023/04/06/CloudCompare-Cmake/image-20230421114707927.png" class="" title="image-20230421114707927">
 
-<p>报错力</p>
+<p>结果配置好，点configure，报错力：</p>
 <img src="/2023/04/06/CloudCompare-Cmake/image-20230421122132860-1682053102945-1.png" class="" title="image-20230421122132860">
 
-<p>可能是我自己重新编译的问题？我重安一遍官方提供的试试</p>
-<p>还真是，我重新配了一下官方安装版就编译通过了</p>
-<p>但之后发现还是没法读取pcd文件，于是这次打算再把PLUGIN_IO_QPDAL选上试试</p>
-<p>结果被QPDAL的安装难倒了，不想搞这个了</p>
-<p>我又查了查好像不需要，还是只用PCL就行，不过可能需要把PCL重新编译一下，然后选个IO之类的东西给激活。</p>
-<p>看了看官方回复，应该不用重新编译PCL，项目里有PCL_IO_PLUGIN，不知道为什么还是不行</p>
+<p>可能编译的时候有些东西没弄好导致后续像cc这种第三方要调用的时候，一些东西匹配不上，导致报错。</p>
+<p>于是我又去pcl官方下了AllInOne版本安装包，并把它安在D盘，稍稍区分一下</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517202635310.png" class="" title="image-20230517202635310">
+
+<p>安好之后，编译选择pcl路径时都用D盘这个AllInOne版本的，就没有问题，直接就编译通过了。。。</p>
+<h4 id="生成的cc-exe读取不了pcd文件"><a href="#生成的cc-exe读取不了pcd文件" class="headerlink" title="生成的cc.exe读取不了pcd文件"></a>生成的cc.exe读取不了pcd文件</h4><p>可以看到ALL_BUILD显示全部成功。</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517203958182.png" class="" title="image-20230517203958182">
+
+<p>INSTALL也都没有问题。</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517204337940.png" class="" title="image-20230517204337940">
+
+<p>题外话，生成INSTALL的时候可以不要直接右键-&gt;生成，而是选仅用于项目-&gt;仅生成INSTALL，这样即可在install文件夹中生成相应的目标文件，而且会快很多。上图其实就是仅用于项目-&gt;仅生成INSTALL的结果。</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517204135730.png" class="" title="image-20230517204135730">
+
+<p>但是生成的cc.exe在读取pcd文件时会报错。</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517204453563.png" class="" title="image-20230517204453563">
+
+<p>而且打开文件选项中也确实找不到pcd选项。</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517204600853.png" class="" title="image-20230517204600853">
+
+<p>下面就开始了漫长的找问题环节。</p>
+<h5 id="QPCL-IO-PLUGIN"><a href="#QPCL-IO-PLUGIN" class="headerlink" title="QPCL_IO_PLUGIN"></a>QPCL_IO_PLUGIN</h5><p>百度这个问题的时候，一个链接跳转到了cc官方开发人员的一个相同问题的回复，题主也是读取不了pcd文件，但是通过他们问答发现，他其实是没编译QPCL_IO_PLUGIN这部分导致的，但我已经都生成过了，所以其实不是这方面的问题。</p>
+<p>不过还是了解到了与读取pcd文件相关的部分，就是生成文件中QPCL_IO_PLUGIN这部分</p>
 <img src="/2023/04/06/CloudCompare-Cmake/image-20230421163243751.png" class="" title="image-20230421163243751">
 
-<p>通过师兄的指引，点开具体的项目文件来查看，发现QPCL_IO_PLUGIN中的文件有报错，而输出又没显示，所以一直都被我忽略了。</p>
+<p>我还特意去看了install文件夹中，相应位置也都生成了相关的dll文件</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517212530860.png" class="" title="image-20230517212530860">
+
+<p>然后点开了这部分具体的项目文件来查看（这一看不要紧，后续好多路直接走歪了）</p>
 <img src="/2023/04/06/CloudCompare-Cmake/image-20230512203546468.png" class="" title="image-20230512203546468">
+
+<p>发现QPCL_IO_PLUGIN中的文件有报错，而输出又没显示，ALL_BUILD也都显示是成功，所以一直都被我忽略了。</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517205156521.png" class="" title="image-20230517205156521">
 
 <p>错误提示为”<strong>C++ 命令行错误: 宏定义无效: BOOST_ALL_NO_LIB-DBOOST_ALL_NO_LIB</strong>“</p>
 <p>去查了一下这个问题，通过修改PCL安装目录下cmake目录，里面有个PCLConfig.cmake文件，定位到该文件的第130行。将**if(WIN32 AND NOT MINGW)<strong>替换成</strong>if(WIN32 AND NOT MINGW AND NOT “${BOOST_DEFINITIONS}” MATCHES “BOOST_ALL_NO_LIB”)**。这样就不会报上述错误了。</p>
 <img src="/2023/04/06/CloudCompare-Cmake/image-20230512204528335.png" class="" title="image-20230512204528335">
 
 <p>但是编译之后还是不行，仍然没法读PCD格式的文件。</p>
-<p>不过插件的位置倒是出现PCL的部分了，也算是一点进步，但还是识别不到PCD格式真不知道是哪里的问题。。。</p>
-<img src="/2023/04/06/CloudCompare-Cmake/image-20230512204107321.png" class="" title="image-20230512204107321">
-
-<p>又注意到cmake编译时第一句”Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.22621.“ </p>
+<h5 id="SDK（显然不是）"><a href="#SDK（显然不是）" class="headerlink" title="SDK（显然不是）"></a>SDK（显然不是）</h5><p>又注意到cmake编译时第一句”Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.22621.“ </p>
 <img src="/2023/04/06/CloudCompare-Cmake/image-20230512202314854.png" class="" title="image-20230512202314854">
 
 <p>我去看了一下确实没安Windows 10.0.22621版本的SDK，然后我又去重新安了一下这个版本的SDK</p>
@@ -135,8 +166,46 @@ if (window.localStorage.getItem('theme-mode') === 'dark') document.documentEleme
 <p>安完这个SDK之后，再来编译发现确实不太一样</p>
 <img src="/2023/04/06/CloudCompare-Cmake/image-20230512203003590.png" class="" title="image-20230512203003590">
 
-<p>但最后结果一样的，还是不行，pcd格式识别 不了。</p>
-<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2023/04/17/Qt6.4-Note/">← Next Qt6学习笔记</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2023/03/21/WampServer-download/">Wamp安装 Prev →</a></div></div></div></div><div class="bottom-btn"><div><a id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧</a><a id="to-index" href="#toc-div" title="To Catalog">≡</a><a id="color-mode" onClick="colorMode.change()" title="Change Theme"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">Dr.Unglaus</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96"><span class="toc-number">1.</span> <span class="toc-text">依赖</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Qt5"><span class="toc-number">1.1.</span> <span class="toc-text">Qt5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OpenGL"><span class="toc-number">1.2.</span> <span class="toc-text">OpenGL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">源码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD"><span class="toc-number">2.1.</span> <span class="toc-text">下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E5%90%88"><span class="toc-number">2.2.</span> <span class="toc-text">组合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">3.</span> <span class="toc-text">编译</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEQt5%E8%B7%AF%E5%BE%84"><span class="toc-number">3.1.</span> <span class="toc-text">配置Qt5路径</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Qt5LinguistTools%E8%B7%AF%E5%BE%84"><span class="toc-number">3.1.1.</span> <span class="toc-text">Qt5LinguistTools路径</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEOpenGL%E8%B7%AF%E5%BE%84"><span class="toc-number">3.2.</span> <span class="toc-text">配置OpenGL路径</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E6%96%87%E4%BB%B6%E8%AF%B4%E6%98%8E"><span class="toc-number">4.</span> <span class="toc-text">编译文件说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A5%E5%85%85"><span class="toc-number">5.</span> <span class="toc-text">补充</span></a></li></ol></div></div><footer><nobr>Published with <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> Theme <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr>by <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/search.js"></script><script class="pjax-js">reset=_=>{code.findCode();}</script><script src="/js/arknights.js"></script><script src="/js/pjax.js"></script><script>window.addEventListener("load",() => {pjax = new Pjax({
+<p>但最后结果一样的，还是不行，pcd格式识别不了。</p>
+<h5 id="VS版本（显然不是）"><a href="#VS版本（显然不是）" class="headerlink" title="VS版本（显然不是）"></a>VS版本（显然不是）</h5><p>有人提到说qt5.15.2对应的版本是msvc2019，我用vs2022来编译是不有问题？我一开始是不屑的，但当我死活调不出来时，我也怀疑是不是跟这玄学有点关系？于是我又安了个vs2019来做编译环境，结果一样的，还是不行。然后也提到过我安的东西有点多？可能哪些东西冲突了？具体指什么有点多我其实也不知道。。。一开始我也是不屑的，可还是找不到原因，那快试试吧。然后安了个虚拟机，配了win10的环境，配win10环境是我怀疑是不是win11的编译环境有点问题，然后在安好vs2019、cmake、cc源码、qt5、pcl，只安了编译cc需要的东西，折腾一天多。然后编译出来的cc.exe还是读不了pcd文件。</p>
+<p>虽说花了一天多有点亏，但也让我确信，肯定跟上面vs版本、编译环境多之类的问题无关<span style="background:#000000;color:black" >（怎么可能是这种问题。。。真是这种问题我也不是没遇到过，应该是能看出来的，我就是太容易被别人的意见影响，尤其不知道对面深浅的时候，容易把对面的意见当真）</span></p>
+<p>主要是肯定了我之前配置的环境什么的都没有问题，毕竟之前又说我vs版本，又说东西安的有点多，搞得我好像是外行，不知道自己在干嘛一样。。。</p>
+<p>后续就是专心找到底是哪里出了问题。</p>
+<h5 id="GitHub-issues"><a href="#GitHub-issues" class="headerlink" title="GitHub-issues"></a>GitHub-issues</h5><p>慢慢学会了去cc官方的GitHub中，有专门的答疑区，即“issues”，其中有各种关于cc这个项目的问题、建议即答疑</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517211729424.png" class="" title="image-20230517211729424">
+
+<p>通过对其中众多帖子的浏览，找了3、4个相关问题的答疑帖来看，大致有了点思路。</p>
+<p>打开自己编译生成的有问题的cc.exe文件，观察下方的控制台输出</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517212034556.png" class="" title="image-20230517212034556">
+
+<p>比较正常能够读取pcd文件官方下载版的cc.exe来看</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517212334064.png" class="" title="image-20230517212334064">
+
+<p>这样配合cc开发这的回答，基本可以确认就是这个QPCL_IO_PLUGIN.dll没有被正确识别为插件，导致的没法读取pcd文件。</p>
+<p>然后我又针对这个问题开始查资料，cc开发这提到可能是缺少qcl相关的dll导致没有程序没有把QPCL_IO_PLUGIN.dll正确识别为插件。但我去检查了，pcl相关的dll都已经加载到cc.exe所在位置了</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517213136660.png" class="" title="image-20230517213136660">
+
+<p>cc开发者还提到了一个判断dll缺失的工具“dependency walker”，通过把想要查看的dll或exe拖到该工具中，帮助快速查看缺少哪些dll文件。</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517213827451.png" class="" title="image-20230517213827451">
+
+<p>但其实到最后我也没搞明白这东西怎么用。。。</p>
+<h5 id="OpenNI2-dll"><a href="#OpenNI2-dll" class="headerlink" title="OpenNI2.dll"></a>OpenNI2.dll</h5><p>最后解决问题还是靠的CSDN上国人写的帖子，他在其中也提到了这种插件加载失败的问题，并给出了解决办法：找不到PCL相关插件的时候，把OpenNI2.dll添加到cc.exe所在位置。</p>
+<p>我去看了眼生成的文件中，cc.exe所在位置中的确没有OpenNI2.dll，于是去当时OpenNI2的安装路径中找到该文件（当然是everything来找的），把它复制到了cc.exe所在位置</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517214455957.png" class="" title="image-20230517214455957">
+
+<p>然后再打开cc.exe，查看支持的打开文件类型，奇迹出现了</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517214658045.png" class="" title="image-20230517214658045">
+
+<p>再看一眼控制台，这次插件也确实地加载上了</p>
+<img src="/2023/04/06/CloudCompare-Cmake/image-20230517214844705.png" class="" title="image-20230517214844705">
+
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>通过上面结果来看，竟然真是缺了OpenNI2.dll导致的。。。难蚌。</p>
+<p>所以之前编译等等一系列步骤其实都没有问题，包括前面提到的点开具体QPCL_IO_PLUGIN项目有报错的问题，也不用在意。毕竟ALL_BUILD下面确实都显示成功了。</p>
+<p>应该就是OpenNI2这个东西比较“各色”，之前安装pcl的时候它就表现不凡，跟别人的安装过程、位置都不一样。所以在INSTALL的过程中，虽然pcl相关的dll都正常加载到了cc.exe所在的位置，而这个OpenNI2.dll并没有被INSTALL加载过去。不过师兄说他直接编译成功了，那看来他的INSTALL有正确的把OpenNI2.dll加载过去？也可能师兄的环境变量path里配置了OpenNI2的环境？具体不太清楚，可能还有哪里有点问题，导致我的INSTALL没有正确加载OpenNI2.dll。不过鉴于我在舍友电脑、宿舍电脑、虚拟机电脑、工位电脑都试过，结果这个INSTALL都没把OpenNI2.dll加载过去来看，我倾向于是师兄比我多配置了点环境变量（maybe？）。当然也可能就是我哪步有点问题？（不可能啊。。。）</p>
+<p>另外从帮我解决问题的CSDN帖子的题主的描述来看，他是通过之前提到“Dependency Walker”检查出来的，但通过我的体验来看，“Dependency Walker”丝毫没有给我提示过缺少OpenNI2.dll的问题。</p>
+<p>当然可能是我没学会怎么用，感觉可以后续试着找找资料学一下，就像题主说的：“怎么才能知道exe运行缺什么dll？有时exe自己会提示，但是有些偏不提示，我们也不是神仙，也猜不到，那就用Dependency Walker检查一下”</p>
+<p>后续开发遇到相关问题也能比较好下手。</p>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2023/04/17/Qt6.4-Note/">← Next Qt6学习笔记</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2023/03/21/WampServer-download/">Wamp安装 Prev →</a></div></div></div></div><div class="bottom-btn"><div><a id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧</a><a id="to-index" href="#toc-div" title="To Catalog">≡</a><a id="color-mode" onClick="colorMode.change()" title="Change Theme"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">Dr.Unglaus</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96"><span class="toc-number">1.</span> <span class="toc-text">依赖</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Qt5"><span class="toc-number">1.1.</span> <span class="toc-text">Qt5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OpenGL%EF%BC%88%E5%8F%AF%E8%B7%B3%E8%BF%87%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">OpenGL（可跳过）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">源码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD"><span class="toc-number">2.1.</span> <span class="toc-text">下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E5%90%88"><span class="toc-number">2.2.</span> <span class="toc-text">组合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">3.</span> <span class="toc-text">编译</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEQt5%E8%B7%AF%E5%BE%84"><span class="toc-number">3.1.</span> <span class="toc-text">配置Qt5路径</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Qt5LinguistTools%E8%B7%AF%E5%BE%84"><span class="toc-number">3.1.1.</span> <span class="toc-text">Qt5LinguistTools路径</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%A5%E5%85%85"><span class="toc-number">3.1.2.</span> <span class="toc-text">补充</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEOpenGL%E8%B7%AF%E5%BE%84%EF%BC%88%E5%8F%AF%E8%B7%B3%E8%BF%87%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">配置OpenGL路径（可跳过）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Build"><span class="toc-number">3.3.</span> <span class="toc-text">Build</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E6%96%87%E4%BB%B6%E8%AF%B4%E6%98%8E"><span class="toc-number">4.</span> <span class="toc-text">编译文件说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91PCL%E6%8F%92%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">编译PCL插件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">5.1.</span> <span class="toc-text">过程中遇到的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pcl%E8%B7%AF%E5%BE%84%E7%9A%84%E9%80%89%E6%8B%A9"><span class="toc-number">5.1.1.</span> <span class="toc-text">pcl路径的选择</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E7%9A%84cc-exe%E8%AF%BB%E5%8F%96%E4%B8%8D%E4%BA%86pcd%E6%96%87%E4%BB%B6"><span class="toc-number">5.1.2.</span> <span class="toc-text">生成的cc.exe读取不了pcd文件</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#QPCL-IO-PLUGIN"><span class="toc-number">5.1.2.1.</span> <span class="toc-text">QPCL_IO_PLUGIN</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#SDK%EF%BC%88%E6%98%BE%E7%84%B6%E4%B8%8D%E6%98%AF%EF%BC%89"><span class="toc-number">5.1.2.2.</span> <span class="toc-text">SDK（显然不是）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#VS%E7%89%88%E6%9C%AC%EF%BC%88%E6%98%BE%E7%84%B6%E4%B8%8D%E6%98%AF%EF%BC%89"><span class="toc-number">5.1.2.3.</span> <span class="toc-text">VS版本（显然不是）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#GitHub-issues"><span class="toc-number">5.1.2.4.</span> <span class="toc-text">GitHub-issues</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#OpenNI2-dll"><span class="toc-number">5.1.2.5.</span> <span class="toc-text">OpenNI2.dll</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.1.3.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li></ol></div></div><footer><nobr>Published with <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> Theme <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr>by <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/search.js"></script><script class="pjax-js">reset=_=>{code.findCode();}</script><script src="/js/arknights.js"></script><script src="/js/pjax.js"></script><script>window.addEventListener("load",() => {pjax = new Pjax({
  cacheBust: false,
  selectors: ['title','article','#aside-block','.pjax-js'],
  switches: {'article': Pjax.switches.sideBySide},
