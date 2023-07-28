@@ -38,3 +38,29 @@ $ hexo deploy
 
 More info: [Deployment](https://hexo.io/docs/one-command-deployment.html)
 
+
+
+# Git的用法
+
+## push
+
+```bash
+git add .
+```
+
+```bash
+git commit -m change
+```
+
+其中"change"为自定义内容
+
+```bash
+git push
+```
+
+## pull
+
+```bash
+git pull
+```
+
