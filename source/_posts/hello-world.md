@@ -38,7 +38,3 @@ $ hexo deploy
 
 More info: [Deployment](https://hexo.io/docs/one-command-deployment.html)
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 37bc485ba4a3b31d02a3ba25267af1715187b72c

@@ -707,7 +707,7 @@ live in details.
 - `vector(int nSize)`：创建一个vector，元素个数为nSize
 - `vector(int nSize,const T &t)`：创建一个vector，元素个数为nSize，且值均为t
 - `vector(const vector&)`：复制构造函数
-- `vector(vegin,end)`：复制[begin,end)区间内另一个数组的元素到vector中（注意区间左闭右开）
+- `vector(begin,end)`：复制[begin,end)区间内另一个数组的元素到vector中（注意区间左闭右开）
 
 用法举例：
 
@@ -729,6 +729,7 @@ vector<int> v4(v3);//将v3复制给了v4
 //复制区间[begin,end)区间内另一个数组的元素到vector中
 int s[] = {1,6,3,2,5};
 vector<int> vec(s, s+5);//s+5指向的是s[]中最后一个元素的后一个位置
+//如果用vec(s,s+4)则只能将1,6,3,2这四个数赋给vec
 
 ```
 
@@ -1182,11 +1183,11 @@ template <
 
 
 
-# 待总结
+## 待总结
 
 
 
-## bitset, 圧位
+### bitset, 圧位
 ​    bitset<10000> s;
 ​    ~, &, |, ^
 ​    >>, <<
@@ -1204,3 +1205,21 @@ template <
     flip()  等价于~
     flip(k) 把第k位取反
 
+
+
+## C++函数的使用
+
+### sort
+
+```C++
+#include <algorithm>
+```
+
+#### 用法
+
+```C++
+vector<int> vec;
+sort(vec.begin(),vec.end());
+```
+
+给定一组数据的开头和结尾，将这段数据按默认**从小到大**的顺序排序
