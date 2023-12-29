@@ -42,6 +42,8 @@ More info: [Deployment](https://hexo.io/docs/one-command-deployment.html)
 
 # Git的用法
 
+在文件夹`D:\Hexo\Unglaus.github.io\source`位置右键“git bash here”
+
 ## push
 
 ```bash
