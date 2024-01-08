@@ -1,0 +1,54 @@
+<!DOCTYPE html><html lang="zh" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>hexo-g-error | Hexo</title><script>var config = {"root":"/","search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy","copyFinish":"copied","expand":"expand"}}</script><script src="//unpkg.com/mermaid@9.2.2/dist/mermaid.min.js"></script><link rel="stylesheet" href="/css/arknights.css"><script>if (window.localStorage.getItem('theme-mode') === 'light') document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark') document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.ttf");
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head><body><div class="loading" style="opacity: 0"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><nav><div class="navBtn hide"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/about/"><span class="navItemTitle">About</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>hexo-g-error</h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2024-01-08T01:24:03.000Z" id="date"> 2024-01-08</time></div></span><br><span>Last Update: <div class="control"><time datetime="2024-01-08T02:04:55.172Z" id="updated"> 2024-01-08</time></div></span></div></div><hr><div id="post-content"><h2 id="发现问题"><a href="#发现问题" class="headerlink" title="发现问题"></a>发现问题</h2><p>好久没有更新hexo博客了，因为<code>hexo -d</code>经常要试好几次才能传上去，有点懒得搞了，所以只把笔记<code>git push</code> 到Github上就结束了</p>
+<p>这天想着攒了不少了，更新一下hexo博客，结果<code>hexo -g</code>的时候出了很奇怪的错</p>
+<img src="/2024/01/08/hexo-g-error/image-20240108093022287.png" class="" title="image-20240108093022287">
+
+<p>上网找了找相关的问题，没有完全一样的，只找到一个也是说<code>hexo -g</code>的时候有奇怪的错误，不过跟我报的错不一样。</p>
+<p>他遇到的问题，删除hexo的所有依赖，即删除“node_modules”文件夹，然后重新安装一遍所有依赖，就解决了。</p>
+<p>记录一下安装依赖的命令，以防后面有用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm install hexo --save<br></code></pre></td></tr></table></figure>
+
+<h2 id="排查过程"><a href="#排查过程" class="headerlink" title="排查过程"></a>排查过程</h2><p>然后我想起来宿舍电脑上的hexo文件夹好久没动了，一直保持后就之前没更新的状态，去试了一下，发现那台电脑上可以正常<code>hexo -g</code></p>
+<p>就想到估计是新写的一些md笔记出了点问题，然后用了一下<code>git pull</code>，看看更新了哪些笔记</p>
+<img src="/2024/01/08/hexo-g-error/0W7A6FM3DA_OXK5_VD2L5U.png" class="" title="~0W7A6FM3DA_OXK5_VD2L5U">
+
+<img src="/2024/01/08/hexo-g-error/image-20240108094253175.png" class="" title="image-20240108094253175">
+
+<p>从上面可以看到，主要改动的就是”<code>index.md</code>“，”<code>hello-world.md</code>“，”<code>C-Note.md</code>“，”<code>Qt-Note.md</code>“，”<code>Qt6.4-PCL1.12.1-VTK9.2.6-error.md</code>“，”<code>QtCreator-config.md</code>“这几篇文章更新了。</p>
+<p>我就把它们都移出文件夹，然后<code>hexo -clean</code>，<code>hexo -g</code>试了一下，发现果然好了，那问题就出在他们其中</p>
+<p><strong>因为我本来以为是不是哪个配置文件出问题了，或者hexo哪个组件升级了还是咋，导致的，想着重装一遍hexo呢，这样看来就是文件的问题</strong></p>
+<p>确定了问题范围之后，我就把他们分别一个一个移进文件夹里，并用<code>hexo -clean</code>，<code>hexo -g</code>测试</p>
+<p>最后锁定是**<code>QtCreator-config.md</code>**中哪个地方出了问题</p>
+<h2 id="进一步排查"><a href="#进一步排查" class="headerlink" title="进一步排查"></a>进一步排查</h2><p>找到具体的文件<code>QtCreator-config.md</code>之后，把这个有问题的原文件放在外面，里面”_post”文件夹新建一个同名文件，然后一段一段的从原文件复制到这个新文件，并用<code>hexo -clean</code>，<code>hexo -g</code>测试</p>
+<p>复制的时候用的代码模式查看，方便一点</p>
+<p>最后发现有一段插入图片的代码跟别人都不一样</p>
+<img src="/2024/01/08/hexo-g-error/image-20240108095825372.png" class="" title="image-20240108095825372">
+
+<p>别的图片都是正常的用Markdown语法插入的，这一个图片不知道为什么是用html格式插入的。。。</p>
+<p>然后把这段图片插入代码改成了Markdown风格，果然问题就解决了。。。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>是由于图片插入的时候，使用了html的语法，导致hexo调用node_modules里的相关插件进行格式转换的时候出现了问题</p>
+<p>（ps：hexo通过node_modules里的插件，把本地的md文件转换成html语言，在网页上显示出来）</p>
+<p>以后遇到类似问题，可以试着在”代码模式”下检查一下图片的插入语法是否有问题</p>
+<p>不过我到底是没想起来，当时是怎么搞的，让这一张图片的插入语法变成了html语法。。。</p>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages" style="justify-content: flex-end"><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2023/09/13/QtCreator-config/">配置Qt Creator环境 Prev →</a></div></div></div></div><div class="bottom-btn"><div><a id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧</a><a id="to-index" href="#toc-div" title="To Catalog">≡</a><a id="color-mode" onClick="colorMode.change()" title="Change Theme"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">Dr.Unglaus</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E7%8E%B0%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">发现问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E6%9F%A5%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">排查过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E6%8E%92%E6%9F%A5"><span class="toc-number">3.</span> <span class="toc-text">进一步排查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol></div></div><footer><nobr>Published with <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> Theme <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr>by <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/search.js"></script><script class="pjax-js">reset=_=>{code.findCode();}</script><script src="/js/arknights.js"></script><script src="/js/pjax.js"></script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script></body></html>

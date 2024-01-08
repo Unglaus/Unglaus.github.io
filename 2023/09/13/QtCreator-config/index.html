@@ -1,0 +1,138 @@
+<!DOCTYPE html><html lang="zh" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>配置Qt Creator环境 | Hexo</title><script>var config = {"root":"/","search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy","copyFinish":"copied","expand":"expand"}}</script><script src="//unpkg.com/mermaid@9.2.2/dist/mermaid.min.js"></script><link rel="stylesheet" href="/css/arknights.css"><script>if (window.localStorage.getItem('theme-mode') === 'light') document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark') document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.ttf");
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head><body><div class="loading" style="opacity: 0"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><nav><div class="navBtn hide"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/about/"><span class="navItemTitle">About</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>配置Qt Creator环境</h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2023-09-13T08:33:05.000Z" id="date"> 2023-09-13</time></div></span><br><span>Last Update: <div class="control"><time datetime="2024-01-08T01:25:52.163Z" id="updated"> 2024-01-08</time></div></span></div></div><hr><div id="post-content"><p>在安装Qt时，一般会自动安装配套的编译器Qt Creator，并为其自动配置好对应的Qt版本。比如当时安装Qt6.4时，自动安的Qt Creator 9，并为Qt6.4自动配置好了开发环境。</p>
+<p>之后又安装了Qt5.15的版本，又给安装了一个Qt Creator 4，把Qt5.15的开发环境配置在里面，每次打开Qt5项目的时候都是自动用Qt Creator 4打开的</p>
+<p>但其实完全没必要，Qt Creator就是个编译器，就用新版的就行，只不过是需要自己手动配置一下需要的Qt版本的开发环境罢了</p>
+<p>下面举例说明</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>打开Qt Creator，找到编辑–&gt;Preferences</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913173513687.png" class="" title="image-20230913173513687">
+
+<p>找到 构建套件(kit)</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913173553228.png" class="" title="image-20230913173553228">
+
+<p>可以看到已经自动配置好了当时配套安装的Qt6.4的环境（自动检测）</p>
+<p>自己之后安装的其他版本的Qt就需要自己手动设置了，如下面手动设置的Qt5.15</p>
+<p>这样其实当时安装其他版本Qt的时候就不需要勾选Qt Creator选项了</p>
+<h3 id="配置编译器"><a href="#配置编译器" class="headerlink" title="配置编译器"></a>配置编译器</h3><p>在上图构建套件窗口选择–&gt;编译器</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913191041419.png" class="" title="image-20230913191041419">
+
+<p>上图中”手动设置”部分就是我们需要配的，图中是已经配置好的效果</p>
+<p>一般就配置两种编译器环境，一种MSVC，一种MinGW</p>
+<p>然后每一种都把C、C++版本都配了就行</p>
+<h4 id="MinGW"><a href="#MinGW" class="headerlink" title="MinGW"></a>MinGW</h4><p>MinGW是Qt最原生的编译器，所以配起来也简单，可以看到MinGW的编译器C和C++都只配了一个，而MSVC的C和C++每个配了四个</p>
+<h5 id="C"><a href="#C" class="headerlink" title="C"></a>C</h5><p>先配C吧，点击右上角”添加”，选MinGW–&gt;C</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913191928071.png" class="" title="image-20230913191928071">
+
+<p>之后可以看到这个界面</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913192058948.png" class="" title="image-20230913192058948">
+
+<p>我们参考上面自动检测到的MinGW For C的配置</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913192145930.png" class="" title="image-20230913192145930">
+
+<p>找到Qt5的gcc.exe路径，设置好即可，名称也参照着改了一下，这样就行了</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913192241380.png" class="" title="image-20230913192241380">
+
+<h5 id="C-1"><a href="#C-1" class="headerlink" title="C++"></a>C++</h5><p>然后配置C++版本的也是同理，先添加–&gt;MinGW–&gt;C++</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913191703610.png" class="" title="image-20230913191703610">
+
+<p>然后配置好编译器路径即可，不过C++用的是g++.exe，就这点区别</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913192505720.png" class="" title="image-20230913192505720">
+
+<h4 id="MSVC"><a href="#MSVC" class="headerlink" title="MSVC"></a>MSVC</h4><p>MSVC稍微麻烦点，其实也不用C、C++每个配四个，不过因为对标上面自动检测出来的配置，所以就每个配了四个</p>
+<h5 id="C-C"><a href="#C-C" class="headerlink" title="C/C++"></a>C/C++</h5><p>跟前面一样，要添加什么就选什么</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913192957494.png" class="" title="image-20230913192957494">
+
+<p>不过跟MinGW不同的是，MSVC中C\C++配置的路径都指向同一个东西，都是vcvarsall.bat</p>
+<p>至于这个东西位置在哪，用”everything”来找就行</p>
+<p>根据我的安装路径，找到<code>vcvarsall.bat</code>在<code>E:\Microsoft Visual Studio 2022\Community\VC\Auxiliary\Build\vcvarsall.bat</code></p>
+<p>然后参照着上面自动检测到的配置来配就行，这里给出每一种具体的配置，到时候自己来调就行</p>
+<p>C和C++的除了到时候自己起的名称不一样，其他所有的东西都一样，这里就以C++为例展示了</p>
+<ul>
+<li><strong>Microsoft Visual C++ Compiler 2019_x86_amd64</strong></li>
+</ul>
+<img src="/2023/09/13/QtCreator-config/image-20230913193953039.png" class="" title="image-20230913193953039">
+
+
+
+<ul>
+<li><strong>Microsoft Visual C++ Compiler 2019_x86</strong></li>
+</ul>
+<img src="/2023/09/13/QtCreator-config/image-20230913194104721.png" class="" title="image-20230913194104721">
+
+<ul>
+<li><strong>Microsoft Visual C++ Compiler 2019_amd64</strong></li>
+</ul>
+<img src="/2023/09/13/QtCreator-config/image-20230913194228510.png" class="" title="image-20230913194228510">
+
+
+
+<ul>
+<li><strong>Microsoft Visual C++ Compiler 2019_amd64_x86</strong></li>
+</ul>
+<img src="/2023/09/13/QtCreator-config/image-20230913194314492.png" class="" title="image-20230913194314492">
+
+<h5 id="可能存在的问题"><a href="#可能存在的问题" class="headerlink" title="可能存在的问题"></a>可能存在的问题</h5><p>可看到自己手动配置的版本都是用的msvc2019，这是因为要配合Qt5.15来使用，好像这个版本的Qt适配的版本就是msvc2019</p>
+<p>到时候具体看要用的Qt版本适配msvc20XX，咱就配msvc20XX</p>
+<p>可能存在的问题就是自己选“ABI”那一栏的时候，可能没有自己想要的msvc20XX，具体什么原因不清楚</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913194841255.png" class="" title="image-20230913194841255">
+
+<p>遇到这种情况不要在意，去选ABI中的“&lt;自定义&gt;”，然后就可以自定义后续的选项了</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913194949764.png" class="" title="image-20230913194949764">
+
+<p>这种时候msvc20XX的可选范围一般就很大了，根据自己的需求选就行</p>
+<p>然后其余的选项就对照着前面自动检测到的对应版本来设置就行</p>
+<h3 id="Qt版本"><a href="#Qt版本" class="headerlink" title="Qt版本"></a>Qt版本</h3><p>也是根据下面自动检测到的Qt6版本的qmake.exe路径，配置好我们所需的qmake.exe的路径</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913195503926.png" class="" title="image-20230913195503926">
+
+<p>当然根据下面自动检测的来看，如果要用ARM64之类的，可能要配的是qmake.bat的路径，不过一直没用上过，也没仔细研究</p>
+<h3 id="构建套件（Kit）"><a href="#构建套件（Kit）" class="headerlink" title="构建套件（Kit）"></a>构建套件（Kit）</h3><p>上面两步配置好了之后，回到构建套件(kit)一栏，分别配置MinGW和MSVC的开发套件即可</p>
+<h4 id="MinGW-1"><a href="#MinGW-1" class="headerlink" title="MinGW"></a><strong>MinGW</strong></h4><p>Qt版本选择我们刚才自定义的所需的版本</p>
+<p>调试器也选择合适的版本，这个好像就用自动检测到的就行，好像不需太在意几点几版本</p>
+<p>然后选择之前配置好的编译器即可，MinGW的编译器选择比较省心，没有多的，就选那俩就行</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913201207209.png" class="" title="image-20230913201207209">
+
+<h4 id="MSVC-1"><a href="#MSVC-1" class="headerlink" title="MSVC"></a><strong>MSVC</strong></h4><p>MSVC同理，跟上面大差不差</p>
+<p>选择Qt版本</p>
+<p>选择调试器，注意MinGW和MSVC的调试器可不一样，这可不能选混了</p>
+<p>然后也是要选择对应的编译器</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913201522055.png" class="" title="image-20230913201522055">
+
+
+
+<h5 id="可能存在的问题-1"><a href="#可能存在的问题-1" class="headerlink" title="可能存在的问题"></a>可能存在的问题</h5><p>这里有个问题，就是因为前面msvc的编译器配了很多个，然后C、C++的还要配合起来才能用，导致不一定哪一个配上好用，这里只能一个一个来试，不过这个试也有一点小技巧</p>
+<p>就是看配置前面的图标，像这种小电脑图标就表示配置成功了，可以正常使用</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913203210951.png" class="" title="image-20230913203210951">
+
+<p>如果是黄叹号标志，就是存在问题，不可用</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913202116876.png" class="" title="image-20230913202116876">
+
+<p>如果是红色叹号，那就是C和C++没对应起来，也不能用</p>
+<img src="/2023/09/13/QtCreator-config/image-20230913203146696.png" class="" title="image-20230913203146696">
+
+<p>emm，好像也不算技巧，反正就是看着这个图标来判断能不能行，然后慢慢试</p>
+<p>然后因为当时配置编译器那一步，所有自动配置的编译器，其名称、配置都是参考上面编译器名称、配置来的，所以应该是能做到一一对应关系</p>
+<p>所以在构建套件（kit）这一步，其实也可以参考自动检测到的可用的开发环境的编译器配置来进行自定义的设置</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>上面一直说的是照着自动检测好的来配置自定义配置</p>
+<p>当然其实也可能他自动识别出来的配置不可用，可能还是要上面这样手动配置一下</p>
+<p>那个时候虽然步骤跟上面一样，但可能没有可参考的，所以这一笔记也可作为后续配置过程中的参考配置</p>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2024/01/08/hexo-g-error/">← Next hexo-g-error</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2023/06/01/VS2022-ccViewer/">基于ccViewer二次开发 Prev →</a></div></div></div></div><div class="bottom-btn"><div><a id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧</a><a id="to-index" href="#toc-div" title="To Catalog">≡</a><a id="color-mode" onClick="colorMode.change()" title="Change Theme"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">Dr.Unglaus</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-number">1.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%BC%96%E8%AF%91%E5%99%A8"><span class="toc-number">1.1.</span> <span class="toc-text">配置编译器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#MinGW"><span class="toc-number">1.1.1.</span> <span class="toc-text">MinGW</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#C"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">C</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#C-1"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">C++</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MSVC"><span class="toc-number">1.1.2.</span> <span class="toc-text">MSVC</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#C-C"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">C&#x2F;C++</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%AF%E8%83%BD%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">可能存在的问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Qt%E7%89%88%E6%9C%AC"><span class="toc-number">1.2.</span> <span class="toc-text">Qt版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E5%A5%97%E4%BB%B6%EF%BC%88Kit%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">构建套件（Kit）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#MinGW-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">MinGW</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MSVC-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">MSVC</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%AF%E8%83%BD%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98-1"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">可能存在的问题</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-number">2.</span> <span class="toc-text">结语</span></a></li></ol></div></div><footer><nobr>Published with <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> Theme <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr>by <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/search.js"></script><script class="pjax-js">reset=_=>{code.findCode();}</script><script src="/js/arknights.js"></script><script src="/js/pjax.js"></script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script></body></html>

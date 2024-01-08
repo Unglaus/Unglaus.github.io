@@ -1,0 +1,92 @@
+<!DOCTYPE html><html lang="zh" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>基于ccViewer二次开发 | Hexo</title><script>var config = {"root":"/","search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy","copyFinish":"copied","expand":"expand"}}</script><script src="//unpkg.com/mermaid@9.2.2/dist/mermaid.min.js"></script><link rel="stylesheet" href="/css/arknights.css"><script>if (window.localStorage.getItem('theme-mode') === 'light') document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark') document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.ttf");
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head><body><div class="loading" style="opacity: 0"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><nav><div class="navBtn hide"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/about/"><span class="navItemTitle">About</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>基于ccViewer二次开发</h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2023-06-01T13:27:46.000Z" id="date"> 2023-06-01</time></div></span><br><span>Last Update: <div class="control"><time datetime="2023-06-02T05:26:39.734Z" id="updated"> 2023-06-02</time></div></span></div></div><hr><div id="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>ccViewer是CloudCompare的一个子项目，负责点云数据的显示部分，可在其基础上专注于增加点云处理功能。</p>
+<p>下面介绍如何在VS2022中使用编译好的ccviewer项目作为基础，或者说将其看作是像PCL一样的库来使用。</p>
+<h2 id="编译源码"><a href="#编译源码" class="headerlink" title="编译源码"></a>编译源码</h2><p>因为是需要编译过程中产生的一系列文件，所以需要首先编译Cloud Compare，其中捎带着会把子项目ccViewer也编译了。</p>
+<p>具体见之前的博客“编译CloudCompare”</p>
+<p>编译用的source、中间生成的build、最终的结果install如下</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601213740840.png" class="" title="image-20230601213740840">
+
+<h2 id="VS2022"><a href="#VS2022" class="headerlink" title="VS2022"></a>VS2022</h2><h3 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h3><p>因为是在ccviewer基础上，所以第一步先把ccviewer项目涉及到的文件在新建的项目中拷贝一遍</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601214149643.png" class="" title="image-20230601214149643">
+
+<p>以下是子项目ccviewer原本的文件结构，可以看出就是整个照搬一遍。不过里面具体的代码就是按照自己的需要来改了</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601214337146.png" class="" title="image-20230601214337146">
+
+<h3 id="配置头文件路径"><a href="#配置头文件路径" class="headerlink" title="配置头文件路径"></a>配置头文件路径</h3><p>虽然从上述文件结构来看ccviewer本身没有太多文件，但其中实现具体方法的时候用到了大量的外部文件，外部文件又用到了其他的文件，层层嵌套，导致实际上文件结构很复杂。</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601214948573.png" class="" title="image-20230601214948573">
+
+<p>但实际我们无需关注这些文件中的具体实现，我们就把他们当成PCL一样的库来使用即可，所以现在要做的就是像当时配置PCL那类库时一样，配置头文件路径、配置链接器、添加dll文件所在路径到path。不过因为是用编译后的项目来做库，还是有点区别的，后面会提到。</p>
+<h4 id="具体过程"><a href="#具体过程" class="headerlink" title="具体过程"></a>具体过程</h4><p>具体的配置头文件的路径的过程就是根据错误提示，看找不到的是哪些 .h文件</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601215414851.png" class="" title="image-20230601215414851">
+
+<p>用everything找到文件所在</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601215516626.png" class="" title="image-20230601215516626">
+
+<p>将路径添加到项目属性配置中，C/C++ -&gt;常规-&gt;附加包含目录，最终所有的路径如下</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601222345038.png" class="" title="image-20230601222345038">
+
+<h3 id="配置链接器"><a href="#配置链接器" class="headerlink" title="配置链接器"></a>配置链接器</h3><p>根据错误提示中的输出，重点关注图示中括号里面的部分</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601220611109.png" class="" title="image-20230601220611109">
+
+<p>将括号里面的部分复制，使用“Far Manger 3”来搜索含有这部分内容的lib文件</p>
+<p>首先定位到大致的搜索位置</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601220842339.png" class="" title="image-20230601220842339">
+
+<p>然后点击Commands-&gt;Find file，他这个软件上面菜单栏不知道为什么是隐藏的，不用在意，就往那个Commands的位置点就行，就会出来菜单了</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601220909494.png" class="" title="image-20230601220909494">
+
+<p>在Containing text中粘贴上面提到的复制的内容，注意不要括号，然后进行搜索</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601221029447.png" class="" title="image-20230601221029447">
+
+<p>最终找到目标lib</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601221208984.png" class="" title="image-20230601221208984">
+
+<p>把lib文件名添加到链接器-&gt;输入-&gt;附加依赖项</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601222039812.png" class="" title="image-20230601222039812">
+
+<p>把lib所在路径添加到链接器-&gt;常规-&gt;附加库目录</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601222257795.png" class="" title="image-20230601222257795">
+
+<h3 id="配置dll路径"><a href="#配置dll路径" class="headerlink" title="配置dll路径"></a>配置dll路径</h3><p>再根据运行时的错误提示找到缺少的dll文件，还是用”everything”来找就行，前面提过跟多次就不细说了</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601222559516.png" class="" title="image-20230601222559516">
+
+<p>问了后续操作的方便，把缺少的这些dll文件都放到了一个文件夹中CC\bin</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601222702443.png" class="" title="image-20230601222702443">
+
+<p>不过实际上这些dll都在一个文件夹D:\CC\install\ccViewer_debug中，就先这样了，后续添加功能可能有其他其他文件夹的dll放进来，省的后续的麻烦了</p>
+<p>然后把这个bin路径添加到环境变量path中即可</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230601222934400.png" class="" title="image-20230601222934400">
+
+<h3 id="PCL插件"><a href="#PCL插件" class="headerlink" title="PCL插件"></a>PCL插件</h3><p>编译好的ccviewer读取pcd格式依赖于配合pcl生成的插件，所以我们在自己建的项目里也要把那些插件的dll复制过去。</p>
+<p>找到编译好的ccviewer程序所在，选中plugins、shaders两个文件夹</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230602132621122.png" class="" title="image-20230602132621122">
+
+<p>将它们复制到我们新建项目的ccviewer_Qt5\x64\Debug路径下</p>
+<img src="/2023/06/01/VS2022-ccViewer/image-20230602132638678.png" class="" title="image-20230602132638678">
+
+
+
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>至此程序就可以正常运行了，再在此基础上进行二次开发即可</p>
+<p>不过程序有些图标没显示，因为没把图标资源文件复制过去，后续研究一下复制到哪里去，待续。。。</p>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2023/09/13/QtCreator-config/">← Next 配置Qt Creator环境</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2023/05/05/CMake-Note/">cmake使用笔记 Prev →</a></div></div></div></div><div class="bottom-btn"><div><a id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧</a><a id="to-index" href="#toc-div" title="To Catalog">≡</a><a id="color-mode" onClick="colorMode.change()" title="Change Theme"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">Dr.Unglaus</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E6%BA%90%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">编译源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#VS2022"><span class="toc-number">3.</span> <span class="toc-text">VS2022</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%BB%BA%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.1.</span> <span class="toc-text">新建项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%A4%B4%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84"><span class="toc-number">3.2.</span> <span class="toc-text">配置头文件路径</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="toc-number">3.2.1.</span> <span class="toc-text">具体过程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E9%93%BE%E6%8E%A5%E5%99%A8"><span class="toc-number">3.3.</span> <span class="toc-text">配置链接器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEdll%E8%B7%AF%E5%BE%84"><span class="toc-number">3.4.</span> <span class="toc-text">配置dll路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PCL%E6%8F%92%E4%BB%B6"><span class="toc-number">3.5.</span> <span class="toc-text">PCL插件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">4.</span> <span class="toc-text">后记</span></a></li></ol></div></div><footer><nobr>Published with <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> Theme <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr>by <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/search.js"></script><script class="pjax-js">reset=_=>{code.findCode();}</script><script src="/js/arknights.js"></script><script src="/js/pjax.js"></script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script></body></html>
