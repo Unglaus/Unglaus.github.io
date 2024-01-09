@@ -25,7 +25,7 @@ Vue，易学易用，性能出色，适用场景丰富的 Web 前端框架。
 
 ## 互动教程
 
-### 声明式渲染
+### 声明式渲染(reactive、ref)
 
 Vue 的核心功能是**声明式渲染**：通过扩展于标准 HTML 的模板语法，我们可以根据 JavaScript 的状态来描述 HTML 应该是什么样子的。当状态改变时，HTML 会自动更新。
 
@@ -82,7 +82,7 @@ message.value = 'Changed'
 <h1>{{ message.split('').reverse().join('') }}</h1>
 ```
 
-### Attribute绑定
+### Attribute绑定(v-bind " : ")
 
 Attribute绑定，`v-bind`指令，拿`div`举例`<div v-bind:id="dynamicID"></div>`，其中的`v-bind`一简写，就变成了`<div :id="dynamicID"></div>`，就剩个冒号了，这一般还真不知道是个什么意思，也没法查起。
 
@@ -132,7 +132,7 @@ const titleClass = ref('title')
 
 设置的时候用到的是动态绑定，让`<h1>`的`class`设为`titleClass`，而`titleClass`的值为`title`，从而实现`class = title`的赋值
 
-### 事件监听
+### 事件监听(v-on " @ ")
 
 事件监听，`v-on`指令，拿`button`举例`<button v-on:click="increment">{{ count }}</button>`，可以简写为`<button @click="increment">{{ count }}</button>`，这种@的写法我感觉还真见过不少，当时没学不知道是什么意思，原来是事件监听`v-on`的缩写。
 
@@ -186,6 +186,161 @@ function sub(){
   <button @click="sub">count is: {{ count }}</button>
 </template>
 ```
+
+### 表单绑定 (v-model)
+
+我们可以同时使用 `v-bind` 和 `v-on` 来在表单的输入元素上创建双向绑定：
+
+```vue
+<input :value="text" @input="onInput">
+```
+
+```js
+methods: {
+  onInput(e) {
+    // v-on 处理函数会接收原生 DOM 事件
+    // 作为其参数。
+    this.text = e.target.value
+  }
+}
+```
+
+试着在文本框里输入——你会看到 `<p>` 里的文本也随着你的输入更新了。
+
+为了简化双向绑定，Vue 提供了一个 `v-model` 指令，它实际上是上述操作的语法糖：
+
+```vue
+<input v-model="text">
+```
+
+`v-model` 会将被绑定的值与 `<input>` 的值自动同步，这样我们就不必再使用事件处理函数了。
+
+`v-model` 不仅支持文本输入框，也支持诸如多选框、单选框、下拉框之类的输入类型。我们在[指南 - 表单绑定](https://cn.vuejs.org/guide/essentials/forms.html)中讨论了更多的细节。
+
+现在，试着用 `v-model` 把代码重构一下吧。
+
+```vue
+<script>
+export default {
+  data() {
+    return {
+      text: ''
+    }
+  },
+  methods: {
+    onInput(e) {
+      this.text = e.target.value
+    }
+  }
+}
+</script>
+
+<template>
+<!--   <input :value="text" @input="onInput" placeholder="Type here"> -->
+  <input v-model= "text" placeholder="Type here">
+  <p>{{ text }}</p>
+</template>
+```
+
+### 条件渲染 (v-if)
+
+我们可以使用 `v-if` 指令来有条件地渲染元素：
+
+```vue
+<h1 v-if="awesome">Vue is awesome!</h1>
+```
+
+这个 `<h1>` 标签只会在 `awesome` 的值为[真值 (Truthy)](https://developer.mozilla.org/zh-CN/docs/Glossary/Truthy) 时渲染。若 `awesome` 更改为[假值 (Falsy)](https://developer.mozilla.org/zh-CN/docs/Glossary/Falsy)，它将被从 DOM 中移除。
+
+我们也可以使用 `v-else` 和 `v-else-if` 来表示其他的条件分支：
+
+```vue
+<h1 v-if="awesome">Vue is awesome!</h1>
+<h1 v-else>Oh no 😢</h1>
+```
+
+现在，示例程序同时展示了两个 `<h1>` 标签，并且按钮不执行任何操作。尝试给它们添加 `v-if` 和 `v-else` 指令，并实现 `toggle()` 方法，让我们可以使用按钮在它们之间切换。
+
+更多细节请查阅 `v-if`：[指南 - 条件渲染](https://cn.vuejs.org/guide/essentials/conditional.html)
+
+简单示例：
+
+```vue
+<script>
+export default {
+  data() {
+    return {
+      awesome: true
+    }
+  },
+  methods: {
+    toggle() {
+      this.awesome = !this.awesome
+    }
+  }
+}
+</script>
+
+<template>
+  <button @click="toggle">toggle</button>
+  <h1 v-if="awesome">Vue is awesome!</h1>
+  <h1 v-else>Oh no 😢</h1>
+</template>
+```
+
+#### data()属性的用法
+
+在Vue中，`data`属性用于定义组件实例的数据。它是一个函数，返回一个包含数据属性的对象。这些数据属性可以在组件的模板或方法中使用。
+
+以下是使用`data`属性的示例：
+
+```javascript
+export default {
+  data() {
+    return {
+      message: 'Hello, Vue!',
+      count: 0
+    };
+  }
+};
+```
+
+在上述示例中，`data`属性是一个函数，返回一个对象。该对象包含两个属性：`message`和`count`。这些属性可以在组件的模板中绑定数据，或在组件的方法中进行读取和修改。
+
+在模板中使用数据属性时，可以通过双大括号插值语法（`{{ }}`）将其绑定到HTML内容中：
+
+```html
+<template>
+  <div>
+    <p>{{ message }}</p>
+    <p>Count: {{ count }}</p>
+  </div>
+</template>
+```
+
+在上述示例中，`message`属性和`count`属性被绑定到两个`<p>`元素中的文本内容。当组件渲染时，模板中的插值表达式将被实际的属性值替换。
+
+在组件的方法中，可以通过`this`关键字访问数据属性：
+
+```javascript
+export default {
+  data() {
+    return {
+      message: 'Hello, Vue!',
+      count: 0
+    };
+  },
+  methods: {
+    incrementCount() {
+      this.count++;
+    }
+  }
+};
+```
+
+在上述示例中，`incrementCount`方法通过`this.count`访问和修改`count`属性的值。通过这种方式，你可以在方法中操作数据属性。
+
+需要注意的是，Vue的响应式系统会跟踪数据属性的变化，并在其发生变化时自动更新相关的视图。这意味着，如果你修改了数据属性的值，与之相关的模板将自动更新以反映这些变化。
 
 
 

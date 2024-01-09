@@ -148,9 +148,23 @@ int main(int argc, char *argv[]){
 
 ![image-20231228113904241](Qt-Note/image-20231228113904241.png)
 
-顺便提一嘴，添加新项的时候，选第一个“Qt Class”，会创建一个Qt类，包含xx.h 和 xx.cpp
+顺便提一嘴，添加新项的时候，选第一个“Qt Class”，会创建一个Qt类，包含xx.h 和 xx.cpp，下面看看它xx.h和xx.cpp中的内容：
 
-然下面“Qt Dialog From File”是只单独创建xx.ui一个文件，没有配套的xx.h和xx.cpp文件生成的
+**`QtClass.h`：**
+
+![image-20231229101345541](Qt-Note/image-20231229101345541.png)
+
+**`QtClass.cpp`：**
+
+![image-20231229101511693](Qt-Note/image-20231229101511693.png)
+
+相比创建Qt Widget Class 来，就少了个ui界面文件，想用纯代码风格编程，来键窗口之类的，创建这种Qt Class就行
+
+***
+
+然后创建新项那一栏再往下：
+
+下面“Qt Dialog From File”是只单独创建xx.ui一个文件，没有配套的xx.h和xx.cpp文件生成的
 
 再往下的一些选项是创建xx.qml，xx.qrc之类的，具体的创建新项的时候去看右边的说明吧
 
@@ -231,3 +245,63 @@ connect(ui.pushButton, SIGNAL(triggered()), this, SLOT(on_actionVoxel_Filter_tri
 ***
 
 **总结：**以后连接信号与槽函数都使用第一种写法，第二种旧版的写法应该是已经弃用了，虽然不会报错，但写了完全没有起到作用，信号与槽完全没有连接起来
+
+## 窗口之间相互传递数据
+
+就以新建的窗口向主窗口传递数据为例：
+
+**`filter_voxel.h`**
+
+![image-20240102095511731](Qt-Note/image-20240102095511731.png)
+
+自定义信号`sendData(QString data)`，其中函数的参数列表，这里是一个`QString`，即是到时要传递的参数的数量和类型，这里可以知道到时只传递一个`QString`类型的数据
+
+像下面这种，就是到时要传递四个`QString`类型的数据
+
+```C++
+signals:
+    void sendData(QString data1, QString data2, QString data3, QString data4);
+```
+
+
+
+**`filter_voxel.cpp`**
+
+![image-20240102100232002](Qt-Note/image-20240102100232002.png)
+
+当按钮被按下的时候使用`emit`触发自定义的信号，并将要传递的数据赋给形参，`ui->lineEdit-text()`即是将新窗口`lineEdit`中的文本传递给了之前自定义的形参`QString data`
+
+如果有多个参数要传，就都一一对应地写明：
+
+```C++
+emit sendData(ui->lineEdit->text(), ui->lineEdit_2->text(), ui->lineEdit_3->text(), ui->lineEdit_4->text());
+```
+
+
+
+**`mainwindow.cpp`**
+
+![image-20240102102013144](Qt-Note/image-20240102102013144.png)
+
+使用`connect`将信号与槽函数连接，信号的形参列表里的参数就传给了槽函数
+
+![image-20240102103220882](Qt-Note/image-20240102103220882.png)
+
+参数传给槽函数，槽函数就正常用就行
+
+***
+
+信号的参数数量与连接的槽函数的参数数量一致：
+
+```C++
+connect(dialog_icp, SIGNAL(sendData(QString, QString, QString, QString)),
+        this, SLOT(Icp_clicked(QString, QString, QString, QString)));
+```
+
+```C++
+void MainWindow::Icp_clicked(QString data1, QString data2, QString data3, QString data4){...}
+```
+
+
+
+# Qt多线程

@@ -72,7 +72,7 @@ viewer.reset(new pcl::visualization::PCLVisualizer(renderer,renderWindow,"viewer
 
 估计还是因为弄了两个vtk导致的，可能pcl1.12和自己配的这个vtk9.2不太搭，网上查了查资料，也都是自己下一个vtk9.1自己编译一下，然后覆盖原来的pcl自带的vtkk，然后再编译PCL。
 
-这次就老实照这个来一遍https://blog.csdn.net/qq_40732350/article/details/125394920，他跟我想的一样，除了vtk自己编译，其他直接用pcl自带的编译好的就行，省事。
+这次就老实照[这个](https://blog.csdn.net/qq_40732350/article/details/125394920)来一遍，他跟我想的一样，除了vtk自己编译，其他直接用pcl自带的编译好的就行，省事。
 
 等开完会试一下。。。
 

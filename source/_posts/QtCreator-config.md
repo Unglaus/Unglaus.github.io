@@ -5,8 +5,6 @@ tags: Qt
 category: 教程
 ---
 
-
-
 在安装Qt时，一般会自动安装配套的编译器Qt Creator，并为其自动配置好对应的Qt版本。比如当时安装Qt6.4时，自动安的Qt Creator 9，并为Qt6.4自动配置好了开发环境。
 
 之后又安装了Qt5.15的版本，又给安装了一个Qt Creator 4，把Qt5.15的开发环境配置在里面，每次打开Qt5项目的时候都是自动用Qt Creator 4打开的
@@ -95,8 +93,6 @@ MSVC稍微麻烦点，其实也不用C、C++每个配四个，不过因为对标
 
 C和C++的除了到时候自己起的名称不一样，其他所有的东西都一样，这里就以C++为例展示了
 
-
-
 - **Microsoft Visual C++ Compiler 2019_x86_amd64**
 
 ![image-20230913193953039](QtCreator-config/image-20230913193953039.png)
@@ -105,9 +101,7 @@ C和C++的除了到时候自己起的名称不一样，其他所有的东西都�
 
 - **Microsoft Visual C++ Compiler 2019_x86**
 
-<img src="QtCreator-config/image-20230913194104721.png" alt="image-20230913194104721"  />
-
-
+![image-20230913194104721](QtCreator-config/image-20230913194104721.png)
 
 - **Microsoft Visual C++ Compiler 2019_amd64**
 
@@ -118,8 +112,6 @@ C和C++的除了到时候自己起的名称不一样，其他所有的东西都�
 - **Microsoft Visual C++ Compiler 2019_amd64_x86**
 
 ![image-20230913194314492](QtCreator-config/image-20230913194314492.png)
-
-
 
 ##### 可能存在的问题
 

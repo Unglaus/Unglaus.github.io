@@ -292,7 +292,7 @@ Point operator + (const Point &A,const Point &B){
 
 ```c++
 ostream& operator << (ostream &out, const Point &p){
-    cout<<"("<<p.x<<","<<p.y<<")";//用out装相应打印的内容，再将out返回
+    cout<<"("<<p.x<<","<<p.y<<")";//用out装想要打印的内容，再将out返回
     return out;
 }
 ```
@@ -1595,6 +1595,3 @@ func_ptr f = [](int a)
 // 函数调用
 f(1314);
 ```
-
-
-

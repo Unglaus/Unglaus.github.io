@@ -525,6 +525,16 @@ vtkzlib-9.1d.lib
 
 至此，就可以在VS里使用PCL愉快开发了。
 
+### debug和release
+
+上面配置的环境是在`debug`版本下用的，添加的`lib`都是带`d`的；如果要配置release版本的环境，添加的lib就是不带d的。
+
+不过也有的库它只有一种版本的`lib`，都一样用就行了
+
+之所以说这个，是因为有个同学把`PCL`相关的`lib`把带`d`和不带`d`的`lib`混在一起加到配置属性中，然后在用`PCL`功能的时候报错了。
+
+所以配置的时候，能注意还是注意一点
+
 # PCL+VS+QT 配置
 
 之前VS+PCL显示时用的是boost，但要配合Qt的ui界面来显示的话，需要用到VTK的一个组件QVTKOpenGLNativeWidget。使用这个组件需要重新编译VTK，让它生成配合Qt的相关文件。之后用我们新编译出的VTK文件替换PCL自带的VTK文件，再重新编译一下PCL，让PCL生成的文件好和现在的VTK配合起来。
