@@ -23,6 +23,16 @@ Vue，易学易用，性能出色，适用场景丰富的 Web 前端框架。
 
 该教材支持边教边实践，左边教着内容，右边给你地方写代码让你试。下面的内容主要围绕跟着这个互动教程学习过程的心得。
 
+***
+
+
+
+**下面笔记记的代码、代码解释，最好是拿到互动教程的页面，对照着实际页面生成的效果来看，更容易有深刻的理解。**
+
+
+
+***
+
 ## 互动教程
 
 ### 声明式渲染(reactive、ref)
@@ -227,11 +237,11 @@ export default {
       text: ''
     }
   },
-  methods: {
-    onInput(e) {
-      this.text = e.target.value
-    }
-  }
+  //methods: {
+  //  onInput(e) {
+  //    this.text = e.target.value
+  //  }
+  //}
 }
 </script>
 
@@ -241,6 +251,12 @@ export default {
   <p>{{ text }}</p>
 </template>
 ```
+
+我们注意到当使用`v-model`关键字时，就不需要使用`methods`中的`onInput(e)`函数来控制`text`的变化了。
+
+因为text已经使用了v-model关键字，将`data(){return{text: ''} }`中的`text`变量与`<input>`块中输入的`value`值进行了双向绑定，即在`input`中输入一个值就会直接改变`text`的值，而且是动态进行的
+
+如果使用上面`<input :value="text" @input="onInput" placeholder="Type here">`这种传统绑定发放，就还是需要上面注释掉的`methods`中的`onInput(e)`方法
 
 ### 条件渲染 (v-if)
 
@@ -341,6 +357,193 @@ export default {
 在上述示例中，`incrementCount`方法通过`this.count`访问和修改`count`属性的值。通过这种方式，你可以在方法中操作数据属性。
 
 需要注意的是，Vue的响应式系统会跟踪数据属性的变化，并在其发生变化时自动更新相关的视图。这意味着，如果你修改了数据属性的值，与之相关的模板将自动更新以反映这些变化。
+
+
+
+### 列表渲染 
+
+我们可以使用 `v-for` 指令来渲染一个基于源数组的列表：
+
+```vue
+<ul>
+  <li v-for="todo in todos" :key="todo.id">
+    {{ todo.text }}
+  </li>
+</ul>
+```
+
+这里的 `todo` 是一个局部变量，表示当前正在迭代的数组元素。它只能在 `v-for` 所绑定的元素上或是其内部访问，就像函数的作用域一样。
+
+注意，我们还给每个 todo 对象设置了唯一的 `id`，并且将它作为[特殊的 `key` attribute](https://cn.vuejs.org/api/built-in-special-attributes.html#key) 绑定到每个 `<li>`。`key` 使得 Vue 能够精确的移动每个 `<li>`，以匹配对应的对象在数组中的位置。
+
+更新列表有两种方式：
+
+1. 在源数组上调用[变更方法](https://stackoverflow.com/questions/9009879/which-javascript-array-functions-are-mutating)：
+
+```js
+this.todos.push(newTodo)
+```
+
+2. 使用新的数组替代原数组：
+
+```js
+this.todos = this.todos.filter(/* ... */)
+```
+
+这里有一个简单的 todo 列表——试着实现一下 `addTodo()` 和 `removeTodo()` 这两个方法的逻辑，使列表能够正常工作！
+
+关于 `v-for` 的更多细节：[指南 - 列表渲染](https://cn.vuejs.org/guide/essentials/list.html)
+
+```Vue
+<script>
+// 给每个 todo 对象一个唯一的 id
+let id = 0
+
+export default {
+  data() {
+    return {
+      newTodo: '',
+      todos: [
+        { id: id++, text: 'Learn HTML' },
+        { id: id++, text: 'Learn JavaScript' },
+        { id: id++, text: 'Learn Vue' }
+      ]
+    }
+  },
+  methods: {
+    addTodo() {
+      this.todos.push({ id: id++, text: this.newTodo }) //按照{ }中的格式更新todos
+      this.newTodo = '' //更新完todos之后，初始化newTodo，为下一次输入做准备
+    },
+    removeTodo(todo) {
+      this.todos = this.todos.filter((t) => t !== todo) //注2
+    }
+  }
+}
+</script>
+
+<template>
+  <form @submit.prevent="addTodo"> <!-- 注1-->
+    <input v-model="newTodo">  <!-- 使用v-model将input的值与变量newTodo双向绑定 -->
+    <button>Add Todo</button>    
+  </form>
+  <ul>
+    <li v-for="todo in todos" :key="todo.id">
+      {{ todo.text }}
+      <button @click="removeTodo(todo)">X</button>
+    </li>
+  </ul>
+</template>
+```
+
+- `<form @submit.prevent="addTodo">` ：这是一个Vue.js中的模板语法，用于在表单提交时触发`addTodo`方法，并阻止表单默认的提交行为。
+
+  在这个模板中，`@submit`是Vue.js的事件绑定语法，表示监听表单的提交事件。`.prevent`是一个修饰符，用于阻止表单的默认提交行为，即防止页面刷新。
+
+  `addTodo`是一个在Vue实例中定义的方法，它会在表单提交时被调用。通过`@submit.prevent`绑定到表单的提交事件，可以在调用`addTodo`方法之前阻止表单的默认提交行为。
+
+- `this.todos = this.todos.filter((t) => t !== todo)`：这段代码是一个在Vue.js中使用的数组过滤操作，它会从`this.todos`数组中移除与指定的`todo`对象相等的元素。在这段代码中，`this.todos`是一个数组，`.filter()`是JavaScript数组的方法之一，它用于遍历数组并返回一个新的数组，该新数组包含满足指定条件的元素。在这里，`.filter((t) => t !== todo)`表示使用一个箭头函数作为过滤条件。箭头函数中的`(t) => t !== todo`是一个回调函数，它接收数组中的每个元素作为参数`t`，并返回一个布尔值，用于确定是否保留该元素。具体到这段代码中，`(t) => t !== todo`表示只保留与`todo`对象不相等的元素。如果元素与`todo`对象相等，它将被过滤掉，不包含在最终的过滤结果中。最后，通过将过滤结果赋值给`this.todos`，实现了从`this.todos`数组中移除与指定的`todo`对象相等的元素。请注意，这段代码中的`this`指的是Vue实例或组件的上下文，在Vue组件中可以使用`this`来访问组件的数据和方法。
+
+
+
+### 计算属性 
+
+让我们在上一步的 todo 列表基础上继续。现在，我们已经给每一个 todo 添加了切换功能。这是通过给每一个 todo 对象添加 `done` 属性来实现的，并且使用了 `v-model` 将其绑定到复选框上：
+
+```vue
+<li v-for="todo in todos">
+  <input type="checkbox" v-model="todo.done">
+  ...
+</li>
+```
+
+下一个可以添加的改进是隐藏已经完成的 todo。我们已经有了一个能够切换 `hideCompleted` 状态的按钮。但是应该如何基于状态渲染不同的列表项呢？
+
+介绍一个新概念：[计算属性](https://cn.vuejs.org/guide/essentials/computed.html)。我们可以使用 `computed` 选项声明一个响应式的属性，它的值由其他属性计算而来：
+
+```js
+export default {
+  // ...
+  computed: {
+    filteredTodos() {
+      // 根据 `this.hideCompleted` 返回过滤后的 todo 项目
+    }
+  }
+}
+```
+
+```diff
+- <li v-for="todo in todos">
++ <li v-for="todo in filteredTodos">
+```
+
+计算属性会自动跟踪其计算中所使用的到的其他响应式状态，并将它们收集为自己的依赖。计算结果会被缓存，并只有在其依赖发生改变时才会被自动更新。
+
+现在，试着添加 `filteredTodos` 计算属性并实现计算逻辑！如果实现正确，在隐藏已完成项目的状态下勾选一个 todo，它也应当被立即隐藏。
+
+```vue
+<script>
+let id = 0
+
+export default {
+  data() {
+    return {
+      newTodo: '',
+      hideCompleted: false,
+      todos: [
+        { id: id++, text: 'Learn HTML', done: true },
+        { id: id++, text: 'Learn JavaScript', done: true },
+        { id: id++, text: 'Learn Vue', done: false }
+      ]
+    }
+  },
+  computed: {
+    filteredTodos() {
+      //... ...
+      return this.hideCompleted
+        ? this.todos.filter((t) => !t.done)
+        : this.todos
+    }
+  },
+  methods: {
+    addTodo() {
+      this.todos.push({ id: id++, text: this.newTodo, done: false })
+      this.newTodo = ''
+    },
+    removeTodo(todo) {
+      this.todos = this.todos.filter((t) => t !== todo)
+    }
+  }
+}
+</script>
+
+<template>
+  <form @submit.prevent="addTodo">
+    <input v-model="newTodo">
+    <button>Add Todo</button>
+  </form>
+  <ul>
+    <!-- <li v-for="todo in todos" :key="todo.id"> -->
+    <li v-for="todo in filteredTodos" :key="todo.id">
+      <input type="checkbox" v-model="todo.done">
+      <span :class="{ done: todo.done }">{{ todo.text }}</span>
+      <button @click="removeTodo(todo)">X</button>
+    </li>
+  </ul>
+  <button @click="hideCompleted = !hideCompleted">
+    {{ hideCompleted ? 'Show all' : 'Hide completed' }}
+  </button>
+</template>
+
+<style>
+.done {
+  text-decoration: line-through;
+}
+</style>
+```
+
+- `return this.hideCompleted ? this.todos.filter((t) => !t.done) : this.todos`：由后面`html`部分中`<button @click="hideCompleted = !hideCompleted">`可知该按钮根据按下次数在两种形态切换，根据`hideCompleted`的值判断是否进行隐藏，若不需要隐藏，`filteredTodos`的值就等于`todos`的值，若要隐藏，使用`vue`的数组过滤操作，滤除`todos`中`done`属性为`true`的值，`this.todos.filter((t) => !t.done)`仅允许`!t.done`为`ture`，即`t.done`为`false`的值通过过滤器，保留下来，成为`filteredTodos`的成员。其中`t.done`属性是根据下面`html`部分中`<input type="checkbox" v-model="todo.done">`选择框是否勾选来决定的，勾选即表示完成，因为通过`v-model`进行了绑定，会将与其绑定的值置为`true`，这里与`todo.done`绑定，所以勾选时会将`todo.done`置为`true`，取消勾选时会将`todo.done`置为`false`
+- `<li v-for="todo in filteredTodos" :key="todo.id">`：将要显示的数组由静态的`todos`换成可变化的`filteredTodos`，以实现要求的功能
 
 
 
