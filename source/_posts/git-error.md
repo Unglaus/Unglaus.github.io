@@ -59,18 +59,19 @@ $ vim config
 
 ```bash
 Host github.com
-  Hostname ssh.github.com
-  Port 443
+Hostname ssh.github.com
+Port 443
 ```
 
 编辑完内容后，按"`esc`"退出键，回到普通模式
 
-在普通模式输入`:w`即可保存编辑内容，并退出vim编辑器了
+在普通模式输入`:w`即可保存编辑内容
 
 顺便提一嘴其他的命令：
 
 - `:q`是退出vim编辑器，但如果你改过了其中的内容，就算是你添加了个'a'，然后又删了，恢复原样也不行，就只有进入过编辑模式，这个命令就没法正常退出，vim编辑器会给给你报错，拦着你，这也是怕你忘了保存直接退出
 - `:q!`这个就是强制退出vim编辑器，不会保存之前编辑的内容
+- `:wq`保存并退出，`:w`和`:q`的组合
 
 具体的vim相关教程见[菜鸟教程](https://www.runoob.com/linux/linux-vim.html)
 
