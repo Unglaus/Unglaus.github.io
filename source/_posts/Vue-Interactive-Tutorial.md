@@ -5,7 +5,7 @@ tags: Vue
 category: 前端技术学习
 ---
 
-## 前言
+# 前言
 
 Vue，易学易用，性能出色，适用场景丰富的 Web 前端框架。 
 
@@ -33,9 +33,9 @@ Vue，易学易用，性能出色，适用场景丰富的 Web 前端框架。
 
 ***
 
-## 互动教程
+# 互动教程
 
-### 声明式渲染(reactive、ref)
+## 声明式渲染(reactive、ref)
 
 Vue 的核心功能是**声明式渲染**：通过扩展于标准 HTML 的模板语法，我们可以根据 JavaScript 的状态来描述 HTML 应该是什么样子的。当状态改变时，HTML 会自动更新。
 
@@ -92,7 +92,7 @@ message.value = 'Changed'
 <h1>{{ message.split('').reverse().join('') }}</h1>
 ```
 
-### Attribute绑定(v-bind " : ")
+## Attribute绑定(v-bind " : ")
 
 Attribute绑定，`v-bind`指令，拿`div`举例`<div v-bind:id="dynamicID"></div>`，其中的`v-bind`一简写，就变成了`<div :id="dynamicID"></div>`，就剩个冒号了，这一般还真不知道是个什么意思，也没法查起。
 
@@ -142,7 +142,7 @@ const titleClass = ref('title')
 
 设置的时候用到的是动态绑定，让`<h1>`的`class`设为`titleClass`，而`titleClass`的值为`title`，从而实现`class = title`的赋值
 
-### 事件监听(v-on " @ ")
+## 事件监听(v-on " @ ")
 
 事件监听，`v-on`指令，拿`button`举例`<button v-on:click="increment">{{ count }}</button>`，可以简写为`<button @click="increment">{{ count }}</button>`，这种@的写法我感觉还真见过不少，当时没学不知道是什么意思，原来是事件监听`v-on`的缩写。
 
@@ -197,7 +197,7 @@ function sub(){
 </template>
 ```
 
-### 表单绑定 (v-model)
+## 表单绑定 (v-model)
 
 我们可以同时使用 `v-bind` 和 `v-on` 来在表单的输入元素上创建双向绑定：
 
@@ -258,7 +258,7 @@ export default {
 
 如果使用上面`<input :value="text" @input="onInput" placeholder="Type here">`这种传统绑定发放，就还是需要上面注释掉的`methods`中的`onInput(e)`方法
 
-### 条件渲染 (v-if)
+## 条件渲染 (v-if)
 
 我们可以使用 `v-if` 指令来有条件地渲染元素：
 
@@ -304,7 +304,7 @@ export default {
 </template>
 ```
 
-#### data()属性的用法
+### data()属性的用法
 
 在Vue中，`data`属性用于定义组件实例的数据。它是一个函数，返回一个包含数据属性的对象。这些数据属性可以在组件的模板或方法中使用。
 
@@ -360,7 +360,7 @@ export default {
 
 
 
-### 列表渲染 
+## 列表渲染 (v-for)
 
 我们可以使用 `v-for` 指令来渲染一个基于源数组的列表：
 
@@ -446,7 +446,7 @@ export default {
 
 
 
-### 计算属性 
+## 计算属性 (computed)
 
 让我们在上一步的 todo 列表基础上继续。现在，我们已经给每一个 todo 添加了切换功能。这是通过给每一个 todo 对象添加 `done` 属性来实现的，并且使用了 `v-model` 将其绑定到复选框上：
 
@@ -547,7 +547,114 @@ export default {
 
 
 
-## Vue脚手架
+## 生命周期和模板引用 (mounted)
+
+目前为止，Vue 为我们处理了所有的 DOM 更新，这要归功于响应性和声明式渲染。然而，有时我们也会不可避免地需要手动操作 DOM。
+
+这时我们需要使用**模板引用**——也就是指向模板中一个 DOM 元素的 ref。我们需要通过[这个特殊的 `ref` attribute](https://cn.vuejs.org/api/built-in-special-attributes.html#ref) 来实现模板引用：
+
+```vue
+<p ref="pElementRef">hello</p>
+```
+
+此元素将作为 `this.$refs.pElementRef` 暴露在 `this.$refs` 上。然而，你只能在组件**挂载**之后访问它。
+
+要在挂载之后执行代码，我们可以使用 `mounted` 选项：
+
+```js
+export default {
+  mounted() {
+    // 此时组件已经挂载。
+  }
+}
+```
+
+这被称为**生命周期钩子**——它允许我们注册一个在组件的特定生命周期调用的回调函数。还有一些其他的钩子如 `created` 和 `updated`。更多细节请查阅[生命周期图示](https://cn.vuejs.org/guide/essentials/lifecycle.html#lifecycle-diagram)。
+
+现在，尝试添加一个 `mounted` 钩子，然后通过 `this.$refs.pElementRef` 访问 `<p>`，并直接对其执行一些 DOM 操作。(例如修改它的 `textContent`)。
+
+```vue
+<script>
+export default {
+  // ...
+  mounted(){
+    const element = this.$refs.pElementRef;
+    element.textContent = 'aaa'
+  }
+}
+</script>
+
+<template>
+  <p ref="pElementRef">hello</p>
+</template>
+```
+
+这个例子中，给`<p>`添加了一个`ref`属性(?)，`ref="pElementRef"`，这样我们就可以通过`this.$refs.pElementRef`来将它锁定，并可以对他进行一些操作。
+
+不过就跟上面说的，需要在组件**挂载**之后才能访问，而要在挂载之后执行代码，就要使用`mounted`选项，在这里面写具体的代码。
+
+说一下上面例子的结果，本来`<p>`跟着hello，网页上显示的也就是hello，而通过`this.$refs.pElementRef`锁定了`<p>`，并对它的`textContent`进行了修改，令其`textContent = 'aaa'`，所以最后网页上`<p>`的内容也就变成了`aaa`
+
+上面的写法可以直接改成`this.$refs.pElementRef.textContent = 'aaa'`，效果是一样的。
+
+另外`const element = this.$refs.pElementRef;`要注意前面的**`const`**，将`element`声明为了静态变量，这是必须的，如果不加这个关键字将其声明为静态变量，则声明的这个`element`相当于是`<p>`的一个副本，不会真正与下面`<p>`绑定，后续的`element.textContent = 'aaa'`也不会改变`hello`为`aaa`。
+
+而添加`const`关键字，声明成静态变量，则这个`element`才是真正跟下面的`<p>`进行了绑定，`element.textContent = 'aaa'`也就能够改变`hello`为`aaa`
+
+
+
+
+
+# 知识补充
+
+### 关于export default
+
+`export default` 是 ES6（ECMAScript 2015）模块系统中用于导出默认值的语法。
+
+在 JavaScript 中，模块系统可以帮助我们将代码分割为不同的模块，以便更好地组织、复用和维护代码。ES6 引入了一种新的模块语法，其中 `export` 关键字用于将值、函数或类等从模块中导出，而 `import` 关键字用于在其他模块中导入这些导出的内容。
+
+`export default` 的作用是导出模块的默认值。一个模块只能有一个默认导出，而且默认导出可以是任何合法的 JavaScript 值，例如对象、函数、类等。通过使用 `export default`，我们可以在导入该模块时，直接获取默认导出的值，而无需使用具体的名称。
+
+以下是一个示例，展示了如何使用 `export default` 导出和导入默认值：
+
+```js
+// module.js
+const myDefault = {
+  name: 'John',
+  age: 30
+};
+
+export default myDefault;
+
+// main.js
+import myDefault from './module.js';
+
+console.log(myDefault); // 输出: { name: 'John', age: 30 }
+```
+
+在上述示例中，`module.js` 文件中使用 `export default` 导出了一个对象 `myDefault`，它作为模块的默认导出。然后，在 `main.js` 文件中使用 `import myDefault from './module.js'` 导入了该默认导出，并将其赋值给了 `myDefault` 变量。此后，我们可以直接使用 `myDefault` 变量来访问和操作模块的默认导出值。
+
+需要注意的是，使用 `export default` 导出的默认值在导入时可以使用任意的名称，因为它是默认导出。但是，可以通过 `import { ... } from './module.js'` 的语法导入模块中其他被具名导出的成员。
+
+#### export default中的属性
+
+以下是一些常见的 Vue 组件属性：
+
+- `props`: 用于接收父组件传递的数据，可以通过属性传递给子组件。
+- `computed`: 用于定义基于组件的响应式数据计算得出的属性。可以根据其他数据的变化自动更新。
+- `watch`: 用于监听一个或多个数据的变化，并在数据发生变化时执行相应的操作。
+- `components`: 用于注册子组件，使其在当前组件中可用。
+- `template`: 定义组件的模板，包含 HTML 结构和 Vue 模板语法。
+- `created`: 组件生命周期钩子，表示组件实例被创建后立即调用的钩子函数。
+- `mounted`: 组件生命周期钩子，表示组件挂载到 DOM 后调用的钩子函数。
+- `beforeDestroy`: 组件生命周期钩子，表示组件销毁之前调用的钩子函数。
+- `computed`: 用于定义计算属性，可以根据响应式数据的变化动态计算出新的值。
+- `methods`: 定义组件的方法，用于处理事件、执行业务逻辑等。
+- `v-model`: 用于实现双向数据绑定，将组件的数据绑定到表单元素或自定义组件上。
+
+
+
+# Vue脚手架
 
 写这个blog另一个很大的原因是，就是想找个地方感慨一下这个事儿。
 

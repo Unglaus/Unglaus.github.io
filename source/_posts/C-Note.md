@@ -124,7 +124,7 @@ memcpy(b,a,sizeof(a));
 
 
 
-## 字符数组
+## 字符数组char[]
 
 **输入字符数组**
 
@@ -255,6 +255,40 @@ while((c=getchar())!=EOF)//EOF是一个特殊的结束标志
 }
 ```
 
+## 字符串string
+
+### 提取一段字符串中的文件名
+
+要从字符串中提取文件名，可以使用字符串处理的方法，例如在C++中使用标准库的函数。
+
+如果字符串中包含文件路径，例如 `/path/to/file.txt`，我们可以提取文件名 `file.txt`。以下是一个示例代码：
+
+```cpp
+#include <iostream>
+#include <string>
+#include <filesystem>
+
+int main() {
+    std::string filePath = "/path/to/file.txt";
+    
+    // 使用 std::filesystem::path 获取文件名
+    std::filesystem::path pathObj(filePath);
+    std::string filename = pathObj.filename().string();
+    
+    std::cout << "Filename: " << filename << std::endl;
+    
+    return 0;
+}
+```
+
+在上述示例中，我们使用了 `<filesystem>` 头文件中的 `std::filesystem::path` 类来处理文件路径。首先，我们将文件路径存储在字符串变量 `filePath` 中。然后，我们创建一个 `std::filesystem::path` 对象 `pathObj`，并将文件路径传递给它。
+
+接下来，我们使用 `filename()` 函数获取文件名，并将其转换为字符串类型，存储在 `filename` 变量中。
+
+最后，我们打印输出文件名。
+
+如果你使用的是旧版本的C++，可能没有 `<filesystem>` 头文件，可以考虑使用其他方法来处理字符串，例如使用字符串的查找和截取功能，或者使用正则表达式等。
+
 
 
 ## 运算符重载
@@ -323,10 +357,10 @@ int main(){
 ```C++
 class MyClass {
 public:
-  MyClass(int a, int b) : member_a(a), member_b(b) {}
+    MyClass(int a, int b) : member_a(a), member_b(b) {}
 private:
-  int member_a;
-  int member_b;
+    int member_a;
+    int member_b;
 };
 ```
 
@@ -334,7 +368,73 @@ private:
 
 使用成员初始化列表的主要优点是，它可以提高代码的效率。如果成员变量使用赋值语句而不是成员初始化列表来初始化，那么它们将在对象构造后被初始化，这可能会导致不必要的内存分配和赋值操作。使用成员初始化列表可以避免这种情况，因为它们可以在对象构造期间直接初始化成员变量。
 
+**初始化的顺序：**在使用初始化列表进行初始化时，初始化的顺序是根据成员声明的顺序来的，所以会先初始化a，然后再b。而跟初始化列表的顺序无关，即使上面初始化列表先b再a，也不会影响实际的初始化顺序。
 
+再举个例子：
+
+```cpp
+class MyClass {
+public:
+	MyClass():n2(0),n1(n2+2){}
+    void Print(){
+        std::cout<<"n1: "<<n1<<",n2: "<<n2<<std::endl;
+    }
+private:
+	int n1;
+	int n2;
+};
+
+int main(){
+    MyClass myclass;
+    myclass.Print();
+    return 0;
+}
+```
+
+问上面例子中，输出的结果是？
+
+```bash
+n1: 随机数,n2: 0
+```
+
+之前说过的，参数初始化的顺序只看声明的顺序，所以虽然在初始化列表中n1写在后面，也是先初始化`n1`，用`n2+2`对`n1`进行初始化，而此时`n2`并没有进行初始化，所以`n2`是一个随机数，所以用它来进行初始化的`n1`也是一个随机数，之后用`0`初始化`n2`，`n2`的值为`0`
+
+***
+
+不过上面的情况，一般就是考察时会这么用，平常自己写的时候，还是初始化列表的顺序和声明的顺序对应起来写比较好。
+
+### 成员中有指针类型时
+
+这时在构造函数中最好对这些指针类型的成员进行初始化操作，避免后续操作出现问题。
+
+```cpp
+class MyClass {
+public:
+	MyClass() {
+    	pointer = new int(0);
+    	// 构造函数的其他代码
+  	}
+    
+    ~MyClass(){
+    	delete pointer;
+        // 析构函数其他代码
+  	}
+private:
+  int* pointer;
+};
+```
+
+同样要注意析构函数中对指针的释放。
+
+上面的构造函数也可以用初始化列表的方法来初始化：
+
+```cpp
+MyClass() : pointer(new int(0)) {
+    // 构造函数的其他代码
+  }
+```
+
+看起来会简洁些。
 
 ## 模板
 
@@ -829,6 +929,78 @@ res.push_back({5,6});
 向其后插入一个一维数组`[5,6]`，res的变化为：
 
 `[[1,2],[3,4]] -> [[1,2],[3,4],[5,6]]`
+
+
+
+#### 查找——find
+
+**来自chatGPT，待验证：**
+
+在C++中，可以使用`std::vector`来存储一系列的元素，并且可以使用不同的方法进行查找操作。下面是几种常见的查找操作：
+
+**1、线性查找：**使用线性查找逐个比较 vector 中的元素，直到找到目标元素或者遍历完整个 vector。
+
+```cpp
+std::vector<int> vec = {1, 2, 3, 4, 5};
+int target = 3;
+
+auto it = std::find(vec.begin(), vec.end(), target);
+
+if (it != vec.end()) {
+    // 目标元素找到
+    std::cout << "Element found at index: " << std::distance(vec.begin(), it) << std::endl;
+} else {
+    // 目标元素未找到
+    std::cout << "Element not found." << std::endl;
+}
+```
+
+**2、二分查找：**如果 vector 已经按升序或降序排列，可以使用二分查找来提高查找效率。但要使用二分查找前，必须确保 vector 已经有序。
+
+```cpp
+std::vector<int> vec = {1, 2, 3, 4, 5};
+int target = 3;
+
+// 使用二分查找前，必须确保 vector 已经有序
+std::sort(vec.begin(), vec.end());
+
+bool found = std::binary_search(vec.begin(), vec.end(), target);
+
+if (found) {
+    // 目标元素找到
+    auto it = std::lower_bound(vec.begin(), vec.end(), target);
+    std::cout << "Element found at index: " << std::distance(vec.begin(), it) << std::endl;
+} else {
+    // 目标元素未找到
+    std::cout << "Element not found." << std::endl;
+}
+```
+
+**3、自定义查找：**如果要根据特定的条件进行查找，可以使用自定义的查找函数或者函数对象。
+
+```cpp
+struct Person {
+    std::string name;
+    int age;
+};
+
+std::vector<Person> people = {{"Alice", 25}, {"Bob", 30}, {"Charlie", 35}};
+std::string targetName = "Bob";
+
+auto it = std::find_if(people.begin(), people.end(), [&](const Person& person) {
+    return person.name == targetName;
+});
+
+if (it != people.end()) {
+    // 目标元素找到
+    std::cout << "Person found: " << it->name << ", Age: " << it->age << std::endl;
+} else {
+    // 目标元素未找到
+    std::cout << "Person not found." << std::endl;
+}
+```
+
+这些是一些基本的查找操作示例。在实际使用中，可以根据具体需求选择合适的查找方法并根据情况进行适当的优化。
 
 
 
