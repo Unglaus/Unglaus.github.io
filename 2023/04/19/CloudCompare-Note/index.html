@@ -1,0 +1,83 @@
+<!DOCTYPE html><html lang="zh" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CloudCompare源码学习笔记 | Hexo</title><script>var config = {"root":"/","search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy","copyFinish":"copied","expand":"expand"}}</script><script src="//unpkg.com/mermaid@9.2.2/dist/mermaid.min.js"></script><link rel="stylesheet" href="/css/arknights.css"><script>if (window.localStorage.getItem('theme-mode') === 'light') document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark') document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.ttf");
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head><body><div class="loading" style="opacity: 0"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><nav><div class="navBtn hide"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/about/"><span class="navItemTitle">About</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>CloudCompare源码学习笔记</h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2023-04-19T02:51:00.000Z" id="date"> 2023-04-19</time></div></span><br><span>Last Update: <div class="control"><time datetime="2024-01-31T03:29:58.150Z" id="updated"> 2024-01-31</time></div></span></div></div><hr><div id="post-content"><h1 id="ccViewer"><a href="#ccViewer" class="headerlink" title="ccViewer"></a>ccViewer</h1><h2 id="代码解析"><a href="#代码解析" class="headerlink" title="代码解析"></a>代码解析</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c++">ccViewer::ccViewer(QWidget *parent, Qt::WindowFlags flags)<br>	: QMainWindow(parent, flags)<br>	, m_glWindow(<span class="hljs-literal">nullptr</span>)<br>	, m_selectedObject(<span class="hljs-literal">nullptr</span>)<br>	, m_3dMouseInput(<span class="hljs-literal">nullptr</span>)<br></code></pre></td></tr></table></figure>
+
+<p>这段代码是一个类 <code>ccViewer</code> 的构造函数的实现，该类是继承自 <code>QMainWindow</code> 类的。</p>
+<p>构造函数的参数 <code>parent</code> 是一个指向父窗口的指针，参数 <code>flags</code> 是窗口的标志。</p>
+<p>下面是成员变量的初始化：</p>
+<ul>
+<li><code>m_glWindow</code> 是一个指向 <code>QOpenGLWidget</code> 对象的指针，初始化为 <code>nullptr</code>。</li>
+<li><code>m_selectedObject</code> 是一个指向选中的对象的指针，初始化为 <code>nullptr</code>。</li>
+<li><code>m_3dMouseInput</code> 是一个指向 <code>Q3DMouseInput</code> 对象的指针，初始化为 <code>nullptr</code>。</li>
+</ul>
+<p>在这个构造函数中，这些成员变量都被初始化为默认值。这些成员变量可以在类的其他成员函数中使用，以实现类的功能。</p>
+<hr>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++">connect(m_glWindow, &amp;ccGLWindow::filesDropped, <span class="hljs-keyword">this</span>, qOverload&lt;QStringList&gt;(&amp;ccViewer::addToDB), Qt::QueuedConnection);<br></code></pre></td></tr></table></figure>
+
+<p>这是一个Qt中的信号与槽连接语句，用于连接一个发送信号的对象（<code>m_glWindow</code>）和一个接收信号的对象（<code>this</code>，即当前对象）。</p>
+<p>具体来说，这条连接语句的含义是：当<code>m_glWindow</code>对象发出<code>filesDropped</code>信号时，调用当前对象（即this）的addToDB函数，该函数需要一个<code>QStringList</code>参数。<strong>连接使用的是Qt的<code>QueuedConnection</code>方式</strong>，这意味着函数调用将被放入事件队列中，以便在当前事件处理结束后执行。</p>
+<p>值得注意的是，这里使用了一个函数指针<code>qOverload&lt;QStringList&gt;(&amp;ccViewer::addToDB)</code>，它指定了要调用的函数的签名。这对于具有多个重载版本的函数非常有用，因为它可以让Qt找到正确的函数版本并进行调用。</p>
+<p>至于如何理解其中的:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c++">qOverload&lt;QStringList&gt;(&amp;ccViewer::addToDB)<br></code></pre></td></tr></table></figure>
+
+<p><code>qOverload</code>是Qt提供的一个模板函数，用于指定信号与槽连接中要调用的槽函数的签名，以避免函数重载时的二义性。具体来说，它的语法如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs C++">qOverload&lt;T&gt;(&amp;Class::Function)<br></code></pre></td></tr></table></figure>
+
+<p>其中，Class是包含该函数的类，Function是要调用的函数名，T则代表该重载函数区别于其他函数的形参类型。</p>
+<p>具体来说，<code>addToDB</code>函数有两个重载，分别为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">ccViewer::addToDB</span><span class="hljs-params">(QStringList filenames)</span></span><br><span class="hljs-function"></span>&#123;<br>	···<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>以及</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">ccViewer::addToDB</span><span class="hljs-params">(ccHObject* entity)</span></span><br><span class="hljs-function"></span>&#123;<br>	···<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>经典的重载函数，名字、返回值相同，以传入的形参不同进行区分</p>
+<p>根据语句<code>qOverload&lt;QStringList&gt;(&amp;ccViewer::addToDB)</code>，QT可以清楚地知道要调用的是第一个<code>addToDB</code>函数（形参类型为<code>QStringList</code>），而不会和其他重载函数混淆，保证将信号与正确地槽函数相连接。</p>
+<h1 id="CloudCompare"><a href="#CloudCompare" class="headerlink" title="CloudCompare"></a>CloudCompare</h1><h2 id="基本架构"><a href="#基本架构" class="headerlink" title="基本架构"></a>基本架构</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs text">CloudCopmare<br>    ^      ^<br>    |      |<br>QCC_IO     QCC_GL<br>   ^        ^  ^<br>    \      /    \<br>     QCC_DB     CC_FBO<br>       ^<br>       |<br>    CC_CORE<br></code></pre></td></tr></table></figure>
+
+<p>上图描述了 <code>CloudCompare</code> 的几个主要模块和他们之间的依赖关系。</p>
+<ul>
+<li><code>CloudCopmare</code> 是程序本身</li>
+<li><code>QCC_IO</code> 负责点云文件的加载和保存</li>
+<li><code>QCC_GL</code> 负责点云的渲染</li>
+<li><code>CC_FBO</code> 负责实现渲染数据的管理</li>
+<li><code>QCC_DB</code> 负责实现模型数据在内存中的存储管理</li>
+<li><code>CC_CORE</code> 实现了点云相关的数据结构和算法</li>
+</ul>
+<h2 id="模块介绍"><a href="#模块介绍" class="headerlink" title="模块介绍"></a>模块介绍</h2><p>上面这些主要模块中，带有 “Q” 开头的说明这个模块依赖 QT。下面自底向上逐个介绍这些模块。</p>
+<h3 id="CC-CORE"><a href="#CC-CORE" class="headerlink" title="CC_CORE"></a>CC_CORE</h3><p>CC_CORE 被作为独立代码库脱离了 CloudCompare 仓库，放在<a target="_blank" rel="noopener" href="https://github.com/CloudCompare/CCCoreLib"><code>CCCoreLib库</code></a>，在 CloudCompare 项目下的 <code>/libs/qCC_db/extern/CCCoreLib</code> 目录作为 git 子模块引入。</p>
+<p>该部分实现了很多点云处理相关数据结构和算法，例如数据结构 <code>CCVector</code>、<code>DgmOctree</code> 和<code>Neighbourhood</code>等，还有用来描述三维模型的各种 <code>cloud</code>、<code>mesh</code> 和 <code>polyline</code> 类型，算法方面提供了常用的点云算法。</p>
+<h3 id="QCC-DB"><a href="#QCC-DB" class="headerlink" title="QCC_DB"></a>QCC_DB</h3><p>该模块在 <code>/libs/qCC_db</code> 目录下。</p>
+<p>这部分实现了 <code>cloud</code>、<code>mesh</code> 和 <code>polyline</code> 等模型数据在内存中存储和管理功能。</p>
+<p>这些模型类全都继承自 <code>ccHObject</code> 类型，<code>ccHobject</code> 又继承了 <code>ccDrawableObject</code>、<code>ccSeriallzableObject</code> 和 <code>ccObject</code>，分别提供绘制、序列化和元信息查询的接口。</p>
+<h3 id="QCC-IO"><a href="#QCC-IO" class="headerlink" title="QCC_IO"></a>QCC_IO</h3><p>该模块在 <code>/libs/qCC_io</code> 目录下。</p>
+<p>这部分规范了文件输入输出的接口，使用 <code>FileIOFilter</code> 作为基类，派生实现不同类型的模型文件的加载和保存。</p>
+<p>源码中已经实现了几个常见的文件类型的 <code>FileIOFilter</code>，如果想要实现自己的模型文件的加载和保存，可以以插件的形式添加到到 <code>CloudCompare</code> 中，继承 <code>FileIOFilter</code> 类并实现对应的接口，最后再调用注册函数启用。</p>
+<h3 id="QCC-GL-和-CC-FBO"><a href="#QCC-GL-和-CC-FBO" class="headerlink" title="QCC_GL 和 CC_FBO"></a>QCC_GL 和 CC_FBO</h3><p>这俩模块在 <code>/libs/qCC_glWindow</code> 和 <code>/libs/CCFbo</code> 目录下。</p>
+<p>这部分实现了模型数据的渲染，底层用的是 <code>OpenGL</code>，实现比较复杂。如果需要拓展新类型的模型或者是自定义渲染效果就需要关注这个模块。</p>
+<h2 id="二次开发"><a href="#二次开发" class="headerlink" title="二次开发"></a>二次开发</h2><p>拓展 CloudCompare 的方式有两种，一种是 UI 界面添加新的组件，另一种是插件化开发。</p>
+<h3 id="UI-功能扩展"><a href="#UI-功能扩展" class="headerlink" title="UI 功能扩展"></a>UI 功能扩展</h3><p>UI 拓展就是 QT 信号槽那一套，先打开 <code>/qCC/ui_templates</code> 目录，找到想要修改的 ui 文件，然后再实现一下对应的槽函数就可以了。</p>
+<h3 id="插件扩展"><a href="#插件扩展" class="headerlink" title="插件扩展"></a>插件扩展</h3><p>插件拓展除了不能修改 CloudCompare 本身的 UI 以外，可以拓展任意想要的功能，CloudCompare 提供了三种基本类型的插件抽象，分别是 IO 插件、GL 插件和标准插件。</p>
+<p>IO 插件是对 <code>QCC_IO</code> 模块的拓展，实现自定义文件的加载和保存。</p>
+<p>GL 插件是对 <code>QCC_GL</code> 和 <code>CC_FBO</code> 的拓展，实现自定义的模型渲染或渲染效果。</p>
+<p>标准插件则没有上俩个插件的限制，可以拓展任何想要的功能。 </p>
+<h2 id="代码解析-1"><a href="#代码解析-1" class="headerlink" title="代码解析"></a>代码解析</h2><div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2023/05/05/CMake-Note/">← Next cmake使用笔记</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2023/04/17/Qt-Note/">Qt学习笔记 Prev →</a></div></div></div></div><div class="bottom-btn"><div><a id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧</a><a id="to-index" href="#toc-div" title="To Catalog">≡</a><a id="color-mode" onClick="colorMode.change()" title="Change Theme"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">Dr.Unglaus</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ccViewer"><span class="toc-number">1.</span> <span class="toc-text">ccViewer</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90"><span class="toc-number">1.1.</span> <span class="toc-text">代码解析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CloudCompare"><span class="toc-number">2.</span> <span class="toc-text">CloudCompare</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text">基本架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.2.</span> <span class="toc-text">模块介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CC-CORE"><span class="toc-number">2.2.1.</span> <span class="toc-text">CC_CORE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#QCC-DB"><span class="toc-number">2.2.2.</span> <span class="toc-text">QCC_DB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#QCC-IO"><span class="toc-number">2.2.3.</span> <span class="toc-text">QCC_IO</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#QCC-GL-%E5%92%8C-CC-FBO"><span class="toc-number">2.2.4.</span> <span class="toc-text">QCC_GL 和 CC_FBO</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91"><span class="toc-number">2.3.</span> <span class="toc-text">二次开发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#UI-%E5%8A%9F%E8%83%BD%E6%89%A9%E5%B1%95"><span class="toc-number">2.3.1.</span> <span class="toc-text">UI 功能扩展</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%92%E4%BB%B6%E6%89%A9%E5%B1%95"><span class="toc-number">2.3.2.</span> <span class="toc-text">插件扩展</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90-1"><span class="toc-number">2.4.</span> <span class="toc-text">代码解析</span></a></li></ol></li></ol></div></div><footer><nobr>Published with <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> Theme <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr>by <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/search.js"></script><script class="pjax-js">reset=_=>{code.findCode();}</script><script src="/js/arknights.js"></script><script src="/js/pjax.js"></script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script></body></html>
