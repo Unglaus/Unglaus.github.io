@@ -1,5 +1,5 @@
 ---
-title: git push时ssh: connect to host github.com port 22: Connection refused
+title: git-push时ssh报错port-22拒绝连接
 date: 2024-01-18 11:43:50
 tags: git
 category: 问题记录

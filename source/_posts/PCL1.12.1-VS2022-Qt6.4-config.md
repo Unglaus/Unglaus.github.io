@@ -59,6 +59,8 @@ PCL官方的github提供了各种版本的PCL源码，同时还提供了已经�
 
 重要！！！后来我发现相比下划线"PCL_1.12.1"，用横杠更好看"PCL-1.12.1"，仅供参考。<span style="background:#000000;color:black">等之后找个空把我要把这些路径名都改过来。</span>
 
+ps:好久之后再来看这个笔记，为什么不要带空格来着？好像是用Cmake编译的时候，带空格的路径它好像是自动识别不到，需要自己手动配置一下，会麻烦一些，所以不怕麻烦可能带空格也没事？
+
 然后在安装过程中如果之前没有安装过OpenNI2，会弹出窗口问是否安装OpenNI2，点击安装即可。
 
 ![image-20230323170801047](PCL1.12.1-VS2022-Qt6.4-config/image-20230323170801047.png)
@@ -932,6 +934,8 @@ vtkzlib-9.2d.lib
 多提一嘴，QVTKOpenGLNativeWidget继承自Qt的QOpenGLWidget，所以用的时候记得Qt组件里选上Qt OpenGLWidget
 
 ![image-20230324103455398](PCL1.12.1-VS2022-Qt6.4-config/image-20230324103455398.png)
+
+关于使用QOpenGLNativeWidget组件进行点云数据可视化的具体代码见“QT+PCL+VTK点云可视化”
 
 # 关于编译好的文件
 
