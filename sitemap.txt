@@ -1,12 +1,14 @@
+http://example.com/2023/03/13/PCL1.12.1-VS2022-Qt6.4-config/
+http://example.com/2024/04/18/QT-PCL-VTK-visualization/
+http://example.com/2024/03/02/cpp-virtual/
 http://example.com/2023/04/19/CloudCompare-Note/
 http://example.com/2024/01/25/QString/
 http://example.com/2022/11/01/C-Note/
 http://example.com/2024/01/23/Typora-Note/
 http://example.com/2023/03/16/Vue-Interactive-Tutorial/
 http://example.com/2023/04/17/Qt-Note/
-http://example.com/2024/01/18/Cpp-static/
-http://example.com/2024/01/16/Cpp-function-lambda/
-http://example.com/2023/03/13/PCL1.12.1-VS2022-Qt6.4-config/
+http://example.com/2024/01/18/cpp-static/
+http://example.com/2024/01/16/cpp-function-lambda/
 http://example.com/2024/01/08/hexo-g-error/
 http://example.com/2023/09/13/QtCreator-config/
 http://example.com/about/index.html
