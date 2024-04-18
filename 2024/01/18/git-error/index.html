@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="zh" theme-mode="dark"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>git-push时ssh报错port-22拒绝连接 | Hexo</title><script>var config = {"root":"/","search":{"preload":false,"activeHolder":"Enter here","blurHolder":"Search","noResult":"Data \"$0\" not found"},"code":{"codeInfo":"$0 - $1 lines","copy":"copy","copyFinish":"copied","expand":"expand"}}</script><script src="//unpkg.com/mermaid@9.2.2/dist/mermaid.min.js"></script><link rel="stylesheet" href="/css/arknights.css"><script>if (window.localStorage.getItem('theme-mode') === 'light') document.documentElement.setAttribute('theme-mode', 'light')
+if (window.localStorage.getItem('theme-mode') === 'dark') document.documentElement.setAttribute('theme-mode', 'dark')</script><style>@font-face {
+ font-family: BenderLight;
+ src: local('Bender'), url("/font/BenderLight.ttf");
+}
+@font-face {
+ font-family: 'JetBrains Mono';
+ src: local('JetBrains Mono'), url('/font/JetBrainsMono-Regular.woff2') format('woff2');
+}</style><meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head><body><div class="loading" style="opacity: 0"><div class="loadingBar left"></div><div class="loadingBar right"></div></div><main><header class="closed"><nav><div class="navBtn hide"><i class="navBtnIcon"><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span><span class="navBtnIconBar"></span></i></div><div class="navItem" id="search-header"><span class="navItemTitle"><input autocomplete="off" autocorrect="off" autocapitalize="none" placeholder="Search" spellcheck="false" maxlength="50" type="text" id="search-input"></span></div><div class="navItem" id="search-holder"></div><div class="search-popup"><div id="search-result"></div></div><ol class="navContent"><li class="navItem"><a class="navBlock" href="/"><span class="navItemTitle">Home</span></a></li><li class="navItem" matchdata="categories,tags"><a class="navBlock" href="/archives/"><span class="navItemTitle">Archives</span></a></li><li class="navItem"><a class="navBlock" href="/about/"><span class="navItemTitle">About</span></a></li></ol></nav></header><article><div id="post-bg"><div id="post-title"><h1>git-push时ssh报错port-22拒绝连接</h1><div id="post-info"><span>First Post: <div class="control"><time datetime="2024-01-18T03:43:50.000Z" id="date"> 2024-01-18</time></div></span><br><span>Last Update: <div class="control"><time datetime="2024-04-18T02:55:50.618Z" id="updated"> 2024-04-18</time></div></span></div></div><hr><div id="post-content"><h2 id="ssh-connect-to-host-github-com-port-22-Connection-refused"><a href="#ssh-connect-to-host-github-com-port-22-Connection-refused" class="headerlink" title="ssh: connect to host github.com port 22: Connection refused"></a>ssh: connect to host github.com port 22: Connection refused</h2><p>今天在用git往github同步笔记的时候，在<code>git push</code>一步的时候失败了，并提示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ git push<br>ssh: connect to host github.com port 22: Connection refused<br>fatal: Could not <span class="hljs-built_in">read</span> from remote repository.<br><br>Please make sure you have the correct access rights<br>and the repository exists.<br></code></pre></td></tr></table></figure>
+
+<p>这个错误提示的是连接<code>github.com</code>的22端口被拒绝了。</p>
+<p>不知道是哪里出了问题，怎么会突然22端口就不让访问了？</p>
+<h3 id="使用GitHub的443端口"><a href="#使用GitHub的443端口" class="headerlink" title="使用GitHub的443端口"></a><strong>使用GitHub的443端口</strong></h3><p>22端口可能被防火墙屏蔽了，可以尝试连接GitHub的443端口。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ vim ~/.ssh/config<br>```<br><span class="hljs-comment"># Add section below to it</span><br>Host github.com<br>  Hostname ssh.github.com<br>  Port 443<br>```<br></code></pre></td></tr></table></figure>
+
+<p>这个解决方案的思路是：给<code>~/.ssh/config</code>文件里添加如下内容，这样ssh连接GitHub的时候就会使用443端口。</p>
+<p>如果<code>~/.ssh</code>目录下没有config文件，执行<code>$ vim ~/.ssh/config</code>得到结果如下：</p>
+<img src="/2024/01/18/git-error/image-20240118185125412.png" class="" title="image-20240118185125412">
+
+<p>因为对vim不太熟，不太知道这是个上面界面。。。不知道该如何往下做了。。。</p>
+<p>这时候可以退出去，按下面步骤来：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ <span class="hljs-built_in">cd</span> ~/.ssh<br>$ vim config<br></code></pre></td></tr></table></figure>
+
+<p>这样会先进入到<code>.ssh</code>文件夹下，然后<code>$ vim config</code>会打开config文件，如果没有该文件，则会新建一个该文件，并进入</p>
+<img src="/2024/01/18/git-error/image-20240118190110296.png" class="" title="image-20240118190110296">
+
+<p>进入后大概是这样，输入”<code>i</code>“进入<code>insert</code>模式，就可以开始编辑文本了，把之前提到的文本输入进去</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">Host github.com<br>Hostname ssh.github.com<br>Port 443<br></code></pre></td></tr></table></figure>
+
+<p>编辑完内容后，按”<code>esc</code>“退出键，回到普通模式</p>
+<p>在普通模式输入<code>:w</code>即可保存编辑内容</p>
+<p>顺便提一嘴其他的命令：</p>
+<ul>
+<li><code>:q</code>是退出vim编辑器，但如果你改过了其中的内容，就算是你添加了个’a’，然后又删了，恢复原样也不行，就只有进入过编辑模式，这个命令就没法正常退出，vim编辑器会给给你报错，拦着你，这也是怕你忘了保存直接退出</li>
+<li><code>:q!</code>这个就是强制退出vim编辑器，不会保存之前编辑的内容</li>
+<li><code>:wq</code>保存并退出，<code>:w</code>和<code>:q</code>的组合</li>
+</ul>
+<p>具体的vim相关教程见<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-vim.html">菜鸟教程</a></p>
+<hr>
+<p>再顺便提一嘴，上面都是用代码创建config的，但其实上述的文件位置就在C盘下：<code>C:\Users\Unglaus\.ssh\</code>，不过其实只是知道文件路径位置，让我自己创建我也不知道这个config是要创建个什么格式的文件，因为这文件创建出来后面都没有后缀名的。。。</p>
+<img src="/2024/01/18/git-error/image-20240118191611804.png" class="" title="image-20240118191611804">
+
+<hr>
+<p>修改完<code>~/.ssh/config</code>文件后，使用<code>ssh -T git@github.com</code>来测试和GitHub的网络通信是否正常，如果提示<code>Hi xxxxx! You&#39;ve successfully authenticated, but GitHub does not provide shell access.</code> 就表示一切正常了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ ssh -T git@github.com<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">Hi xxxxx! You<span class="hljs-string">&#x27;ve successfully authenticated, but GitHub does not</span><br><span class="hljs-string">provide shell access.</span><br></code></pre></td></tr></table></figure>
+
+<p>到这里我的问题就解决了，不过看网上也有可能继续提示端口443也不好用的情况。。。</p>
+<hr>
+<p>这样的话可能只能试试另一种方法，就是不用ssh协议，改用http协议的。</p>
+<p>但不是很推荐，因为看到有很多教程是用http协议连不上GitHub，教着怎么改成ssh协议来连GitHub的。。。</p>
+<div id="paginator"></div></div><div id="post-footer"><div id="pages"><div class="footer-link" style="width: 50%;text-align:right;border-right:1px #fe2 solid"><a href="/2024/01/23/Typora-Note/">← Next Typora-Note</a></div><div class="footer-link" style="width: 50%;right:1px;border-left:1px #fe2 solid"><a href="/2024/01/18/cpp-static/">C++类的静态成员 Prev →</a></div></div></div></div><div class="bottom-btn"><div><a id="to-top" onClick="scrolls.scrolltop();" title="To Top" style="opacity: 0; display: none;">∧</a><a id="to-index" href="#toc-div" title="To Catalog">≡</a><a id="color-mode" onClick="colorMode.change()" title="Change Theme"></a></div></div></article><aside><div id="about"><a href="/" id="logo"><img src="https://ak.hypergryph.com/assets/index/images/ak/pc/faction/1.png" alt="Logo"></a><h1 id="Dr"><a href="/">Dr.Unglaus</a></h1><div id="description"><p></p></div></div><div id="aside-block"><div id="toc-div"><h1>Catalog</h1><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh-connect-to-host-github-com-port-22-Connection-refused"><span class="toc-number">1.</span> <span class="toc-text">ssh: connect to host github.com port 22: Connection refused</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8GitHub%E7%9A%84443%E7%AB%AF%E5%8F%A3"><span class="toc-number">1.1.</span> <span class="toc-text">使用GitHub的443端口</span></a></li></ol></li></ol></div></div><footer><nobr>Published with <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a></nobr><wbr><nobr> Theme <a target="_blank" rel="noopener" href="https://github.com/Yue-plus/hexo-theme-arknights">Arknights</a></nobr><wbr><nobr>by <a target="_blank" rel="noopener" href="https://github.com/Yue-plus">Yue_plus</a></nobr></footer></aside></main><canvas id="canvas-dust"></canvas><script src="/js/search.js"></script><script class="pjax-js">reset=_=>{code.findCode();}</script><script src="/js/arknights.js"></script><script src="/js/pjax.js"></script><script>window.addEventListener("load",() => {pjax = new Pjax({
+ cacheBust: false,
+ selectors: ['title','article','#aside-block','.pjax-js'],
+ switches: {'article': Pjax.switches.sideBySide},
+ switchesOptions: {
+   'article': {
+     classNames: {
+       remove: "pjax-out",
+       add: "pjax-in"
+     }
+   }
+ }
+});
+document.addEventListener("pjax:complete", reset);reset()})</script></body></html>
